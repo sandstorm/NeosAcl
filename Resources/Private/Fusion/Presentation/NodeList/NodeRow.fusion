@@ -1,0 +1,93 @@
+prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow) < prototype(Neos.Fusion:Component) {
+    node = null
+
+    // TODO: better somehow possible??
+    @context.node = ${this.node}
+    showLinkUri = Neos.Fusion:UriBuilder {
+        action = "show"
+        arguments.node = ${node.nodePath}
+    }
+    renderer = afx`
+        <tr>
+            <td class="acl-nodelevel-{node.nodeLevel}"><span>{props.node.nodeLabel}</span></td>
+            <td><span>{props.node.nodeIdentifier}</span></td>
+            <td><span class="neos-label">{props.node.nodeType}</span></td>
+            <td>
+                <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl acl={props.node.acl} />
+            </td>
+            <td>
+                <a href={props.showLinkUri} class="neos-button neos-button-success" >
+                    <i class="icon-white icon-eye-open"></i>
+                </a>
+            </td>
+        </tr>
+
+        <Neos.Fusion:Value @if.hasChildren={props.node.childNodes} @children="value">
+            <Neos.Fusion:Loop items={props.node.childNodes} itemName="childNode" @children="itemRenderer">
+                <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow node={childNode} />
+            </Neos.Fusion:Loop>
+        </Neos.Fusion:Value>
+    `
+}
+
+prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl) < prototype(Neos.Fusion:Case) {
+    @context.acl = ${this.acl}
+
+    moreThanThreeAcls {
+        condition = ${Array.length(acl) > 3}
+        element = Neos.Fusion:Component {
+            acl = ${acl}
+            renderer = afx`
+                <div class="acl-data" style="display: none">
+                    <Neos.Fusion:Loop items={props.acl} itemName="checks" itemKey="roleIdentifier" @children="itemRenderer">
+                        <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Checks checks={checks} roleIdentifier={roleIdentifier} />
+                    </Neos.Fusion:Loop>
+                </div>
+                <button class="neos-button neos-button-success acl-toggle">Show all</button>
+            `
+        }
+    }
+
+    default {
+        condition = true
+        element = Neos.Fusion:Component {
+            acl = ${acl}
+            renderer = afx`
+                <Neos.Fusion:Loop items={props.acl} itemName="checks" itemKey="roleIdentifier" @children="itemRenderer">
+                    <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Checks checks={checks} roleIdentifier={roleIdentifier} />
+                </Neos.Fusion:Loop>
+            `
+        }
+    }
+}
+
+
+prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl) < prototype(Neos.Fusion:Component) {
+    checks = null
+    nodeIdentifier = null
+
+    renderer = afx`
+        <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Icon value={props.checks.createNodeOfType} />
+        <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Icon value={props.checks.editNode} />
+        <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Icon value={props.checks.removeNode} />
+        <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Icon value={props.checks.showInTree} />
+
+        <span class="neos-label">{props.roleIdentifier}</span>
+        <br/>
+    `
+}
+
+
+prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Icon) < prototype(Neos.Fusion:Component) {
+    value = null
+
+    renderer = afx`
+        <Neos.Fusion:Value @if.valueTrue={props.value} @children="value">
+            <i class="icon-nodeCheck icon-green fa-check"></i>
+        </Neos.Fusion:Value>
+
+        <Neos.Fusion:Value @if.valueFalse={!props.value} @children="value">
+            <i class="icon-nodeCheck icon-red fa-times"></i>
+        </Neos.Fusion:Value>
+    `
+}

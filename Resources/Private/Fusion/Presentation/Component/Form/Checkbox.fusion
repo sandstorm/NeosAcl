@@ -1,0 +1,9 @@
+prototype(Sandstorm.NeosAcl:Presentation.Component.Form.Checkbox) < prototype(Neos.Fusion:Component) {
+    id = ''
+    name = ''
+    value = ''
+
+    renderer = afx`
+        <input type="checkbox" id={props.id} name={props.name} value={props.value} />
+    `
+}

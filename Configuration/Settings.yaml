@@ -1,0 +1,15 @@
+Neos:
+  Neos:
+    modules:
+      administration:
+        submodules:
+          acl:
+            label: 'ACL Inspector'
+            controller: 'Sandstorm\NeosAcl\Controller\Module\ACLInspectorController'
+            description: 'Module to check the acl'
+            icon: 'icon-lock'
+            actions:
+              index:
+                label: 'ACL Inspector'
+                title: 'ACL Inspector'
+            privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.ACLInspector'

@@ -1,0 +1,15 @@
+#                                                                        #
+# Security policy for the Neos package                                   #
+#                                                                        #
+
+privilegeTargets:
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+    'Sandstorm.NeosAcl:Backend.Module.ACLInspector':
+      matcher: 'method(Sandstorm\NeosAcl\Controller\Module\ACLInspectorController->(index|show)Action())'
+
+roles:
+  'Neos.Neos:Administrator':
+    privileges:
+      -
+        privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.ACLInspector'
+        permission: GRANT

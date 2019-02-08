@@ -1,0 +1,14 @@
+.icon-green { color: green; }
+.icon-red { color: red; }
+.icon-nodeCheck { margin: 0 10px !important; }
+.acl-dropdown {border: none; padding: 0 14px !important; border-top: 2px solid #595959; background-color: #3f3f3f;}
+.acl-dropdown span { display: block; height: 40px; line-height: 36px; }
+.acl-dropdown span span{ display: inline; color: #9C9C9C; }
+
+.acl-nodelevel-4 span { padding-left: 20px;}
+.acl-nodelevel-5 span { padding-left: 40px;}
+.acl-nodelevel-6 span { padding-left: 60px;}
+.acl-nodelevel-7 span { padding-left: 80px;}
+.acl-nodelevel-8 span { padding-left: 90px;}
+.acl-nodelevel-9 span { padding-left: 100px;}
+.acl-nodelevel-10 span { padding-left: 110px;}

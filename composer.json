@@ -3,7 +3,8 @@
     "type": "neos-package",
     "name": "sandstorm/neosacl",
     "require": {
-        "neos/flow": "*"
+        "neos/flow": "*",
+        "neos/fusion-afx": "*"
     },
     "autoload": {
         "psr-4": {

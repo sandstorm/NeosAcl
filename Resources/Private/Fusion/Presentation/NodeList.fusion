@@ -1,0 +1,36 @@
+prototype(Sandstorm.NeosAcl:Presentation.NodeList) < prototype(Neos.Fusion:Component) {
+    nodes = ${[]}
+
+    renderer = afx`
+        <legend>Access Control List</legend>
+        <div class="neos-content neos-container-fluid">
+
+            <table class="neos-table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Identifier</th>
+                    <th>Nodetype</th>
+                    <th>
+                        <i class="icon-nodeCheck icon-white icon-plus"></i>
+                        <i class="icon-nodeCheck icon-white icon-pencil"></i>
+                        <i class="icon-nodeCheck icon-white icon-times"></i>
+                        <i class="icon-nodeCheck icon-white icon-sitemap"></i>
+                    </th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <Neos.Fusion:Loop items={props.nodes} itemName="rootNode" @children="itemRenderer">
+                        <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow node={rootNode} />
+                    </Neos.Fusion:Loop>
+
+                    <Neos.Fusion:Value @if.noNodes={!nodes} @children="value">
+                        <tr><td colspan="4">No nodes found</td></tr>
+                    </Neos.Fusion:Value>
+                </tbody>
+            </table>
+
+        </div>
+    `
+}

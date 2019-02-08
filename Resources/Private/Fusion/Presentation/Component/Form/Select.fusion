@@ -1,0 +1,12 @@
+prototype(Sandstorm.NeosAcl:Presentation.Component.Form.Select) < prototype(Neos.Fusion:Component) {
+    name = null
+    options = ${[]}
+
+    renderer = afx`
+        <select name={props.name}>
+            <Neos.Fusion:Loop items={props.options} itemName="option" @children="itemRenderer">
+                <option value={option}>{option}</option>
+            </Neos.Fusion:Loop>
+        </select>
+    `
+}

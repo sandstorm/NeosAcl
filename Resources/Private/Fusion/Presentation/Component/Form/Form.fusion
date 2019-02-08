@@ -1,0 +1,10 @@
+prototype(Sandstorm.NeosAcl:Presentation.Component.Form.Form) < prototype(Neos.Fusion:Component) {
+    content = null
+    uri = Neos.Fusion:UriBuilder
+
+    renderer = afx`
+        <form action={props.uri}>
+            {props.content}
+        </form>
+    `
+}

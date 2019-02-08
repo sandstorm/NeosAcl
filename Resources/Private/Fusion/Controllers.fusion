@@ -1,0 +1,3 @@
+Sandstorm.NeosAcl.Module.ACLInspectorController.index = Sandstorm.NeosAcl:Controller.Acl.Index {
+    dto = ${dto}
+}

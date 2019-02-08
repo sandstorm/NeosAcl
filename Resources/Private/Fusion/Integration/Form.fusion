@@ -1,0 +1,7 @@
+prototype(Sandstorm.NeosAcl:Integration.Form) < prototype(Neos.Fusion:Template) {
+    templatePath = "resource://Sandstorm.NeosAcl/Private/Templates/Form.html"
+    dto = ${dto}
+    nodes = ${nodes}
+    roles = ${roles}
+
+}
