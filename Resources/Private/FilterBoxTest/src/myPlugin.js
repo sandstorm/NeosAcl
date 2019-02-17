@@ -1,14 +1,14 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import Widget from '@ckeditor/ckeditor5-widget/src/widget';
-import { toWidget, toWidgetEditable } from '@ckeditor/ckeditor5-widget/src/utils';
-import { downcastElementToElement } from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
+import {toWidget, toWidgetEditable} from '@ckeditor/ckeditor5-widget/src/utils';
+import {downcastElementToElement, insertElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
 import ViewPosition from '@ckeditor/ckeditor5-engine/src/view/position';
-import { upcastElementToElement } from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
+import {upcastElementToElement} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 import View from '@ckeditor/ckeditor5-ui/src/view';
 
 import Model from '@ckeditor/ckeditor5-ui/src/model';
 import Collection from '@ckeditor/ckeditor5-utils/src/collection';
-import { addListToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
+import {addListToDropdown, createDropdown} from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 
 
 class SampleInputView extends View {
@@ -54,7 +54,7 @@ class SampleInputView extends View {
         addListToDropdown(dropdownView, items);
 
         dropdownView.on('execute', (event) => {
-            console.log("CALL", event, event.source.label,  event.source.myId);
+            console.log("CALL", event, event.source.label, event.source.myId);
             console.log("XX", dropdownView.buttonView);
 
             dropdownView.buttonView.label = event.source.label;
@@ -93,18 +93,19 @@ class SampleInputView extends View {
 }
 
 
-
 export default class MyPlugin extends Plugin {
     static get requires() {
         return [Widget];
     }
+
     init() {
+        this.editor.conversion.elementToElement({model: 'paragraph', view: 'span', converterPriority: 'high'});
         console.log("this.editor", this.editor);
 
         /*this.editor.editing.downcastDispatcher.on('insert', ( evt, data, conversionApi ) => {
             console.log("INSERT", evt, data, conversionApi);
         });*/
-        console.log('InsertImage was initialized');
+        console.log('InsertImage2 was initialized');
 
         const model = this.editor.model;
 
@@ -126,75 +127,72 @@ export default class MyPlugin extends Plugin {
             .add(downcastElementToElement({
                 model: 'widget',
                 view: (modelItem, writer) => {
-                    return writer.createContainerElement('div', { class: 'widget' });
+                    return writer.createContainerElement('div', {class: 'widget'});
                 }
             }))
             .add(downcastElementToElement({
                 model: 'nested',
                 view: (modelItem, writer) => {
-                    return writer.createContainerElement('div', { class: 'nested' });
+                    return writer.createContainerElement('div', {class: 'nested'});
                 }
             }));
 
         this.editor.conversion.for('editingDowncast')
-            .add(downcastElementToElement({
-                model: 'widget',
-                view: (modelItem, writer) => {
-                    const div = writer.createContainerElement('div', { class: 'widget' });
-                    const x2 = writer.createUIElement('div', null, function (domDocument) {
-                        const domElement = this.toDomElement(domDocument);
+            .add(dispatcher => {
+                const insertViewElement = insertElement(
+                    (modelItem, writer) => {
+                        const div = writer.createContainerElement('div', {class: 'widget'});
+                        const x2 = writer.createUIElement('div', null, function (domDocument) {
+                            const domElement = this.toDomElement(domDocument);
 
-                        // HINT: we are rendering a view here inside a Widget :)
-                        const view = new SampleInputView();
-                        view.render();
+                            // HINT: we are rendering a view here inside a Widget :)
+                            const view = new SampleInputView();
+                            view.render();
 
-                        domElement.appendChild(view.element);
-                        view.isEnabled = true;
+                            domElement.appendChild(view.element);
+                            view.isEnabled = true;
 
-                        // TODO: For some reason, it is not possible to interact with the view.
+                            return domElement;
+                        });
 
-                        return domElement;
+                        writer.insert(writer.createPositionAt(div, 0), x2);
+
+                        const viewSlot = writer.createContainerElement('div', {class: 'slot'});
+                        writer.insert(writer.createPositionAt(div, 1), viewSlot);
+
+                        const x3 = writer.createUIElement('div', null, function (domDocument) {
+                            const domElement = this.toDomElement(domDocument);
+
+                            domElement.innerHTML = "After";
+                            return domElement;
+                        });
+
+                        writer.insert(writer.createPositionAt(div, 2), x3);
+
+                        return toWidget(div, writer, {label: 'widget label'});
                     });
 
-                    // TODO: Somehow, the <nested> model element is always inserted BEFORE the "x2" UI element. How can ensure that <nested> is rendered AFTER "x2"?
-                    writer.insert(writer.createPositionAt(div, 0), x2);
+                dispatcher.on('insert:widget', (evt, data, conversionApi) => {
+                    insertViewElement(evt, data, conversionApi);
 
-                    return toWidget(div, writer, { label: 'widget label' });
-                }
-            }))
+                    // Use the existing "old" mapping created by `insertViewElement()`.
+                    const viewContainer = conversionApi.mapper.toViewElement(data.item);
+                    const viewSlot = viewContainer.getChild(1);
+
+                    conversionApi.mapper.bindElements(data.item, viewSlot);
+                });
+            })
             .add(downcastElementToElement({
                 model: 'nested',
                 view: (modelItem, writer) => {
                     // const viewPosition = conversionApi.mapper.toViewPosition( data.range.start );
-                    const nested = writer.createEditableElement('div', { class: 'nested' });
+                    const nested = writer.createEditableElement('div', {class: 'nested'});
 
                     return toWidgetEditable(nested, writer);
                 }
             }));
 
-        this.editor.editing.mapper.on('modelToViewPosition', (evt, data) => {
-            if (data.modelPosition.parent.name === 'nested') {
-                console.log("XXXXXXXXXY");
-                const viewX = this.editor.editing.mapper.toViewElement(data.modelPosition.parent);
-                data.viewPosition = new ViewPosition( viewX, 1 );
-                evt.stop();
-            }
-        })
 
-        /*mapper.on( 'modelToViewPosition', ( evt, data ) => {
-        *			const positionParent = modelPosition.parent;
-        *
-        *			if ( positionParent.name == 'captionedImage' ) {
-            *				const viewImg = data.mapper.toViewElement( positionParent );
-            *				const viewCaption = viewImg.nextSibling; // The <span> element.
-            *
-            *				data.viewPosition = new ViewPosition( viewCaption, modelPosition.offset );
-            *
-            *				// Stop the event if other callbacks should not modify calculated value.
-            *				evt.stop();
-            *			}
-        *		} );
-*/
         this.editor.conversion.for('upcast')
             .add(upcastElementToElement({
                 view: {

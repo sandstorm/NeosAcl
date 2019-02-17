@@ -5,11 +5,15 @@
       <change beforePath="$PROJECT_DIR$/../../../Classes/Service/ACLCheckerService.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Classes/Service/ACLCheckerService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../Configuration/Policy.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Configuration/Policy.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../Configuration/Settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Configuration/Settings.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/FilterBoxTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FilterBoxTest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ckeditor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ckeditor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/myPlugin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/myPlugin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Fusion/Integration/AclController.fusion" beforeDir="false" afterPath="$PROJECT_DIR$/../Fusion/Integration/AclController.fusion" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Fusion/Presentation/NodeList.fusion" beforeDir="false" afterPath="$PROJECT_DIR$/../Fusion/Presentation/NodeList.fusion" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Fusion/Presentation/NodeList/NodeRow.fusion" beforeDir="false" afterPath="$PROJECT_DIR$/../Fusion/Presentation/NodeList/NodeRow.fusion" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Templates/Form.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Templates/Form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Templates/Standard/Index.html" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/dist/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,22 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/ckeditor.js">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/AutocompletePlugin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#85#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/myPlugin.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="505">
-              <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
+            <state relative-caret-position="175">
+              <caret line="72" column="41" selection-start-line="72" selection-start-column="41" selection-end-line="72" selection-end-column="41" />
               <folding>
                 <element signature="e#0#57#0" expanded="true" />
               </folding>
@@ -44,54 +37,131 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/conversion/downcast-converters.js">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-utils/src/emittermixin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="491" column="56" selection-start-line="491" selection-start-column="56" selection-end-line="491" selection-end-column="56" />
+            <state relative-caret-position="118">
+              <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/conversion/mapper.js">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/toolbar/balloon/balloontoolbar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="453" column="4" selection-start-line="453" selection-start-column="4" selection-end-line="453" selection-end-column="4" />
+            <state relative-caret-position="2148">
+              <caret line="188" column="70" selection-start-line="188" selection-start-column="47" selection-end-line="188" selection-end-column="70" />
               <folding>
-                <element signature="e#176#222#0" expanded="true" />
+                <element signature="e#185#242#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="34" lean-forward="true" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+            <state relative-caret-position="236">
+              <caret line="194" column="21" selection-start-line="194" selection-start-column="21" selection-end-line="194" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/list/listview.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="60" column="39" lean-forward="true" selection-start-line="60" selection-start-column="39" selection-end-line="60" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/focuscycler.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="236">
+              <caret line="251" column="43" selection-start-line="251" selection-start-column="37" selection-end-line="251" selection-end-column="43" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/view.js">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1385">
+              <caret line="146" column="23" selection-start-line="146" selection-start-column="23" selection-end-line="146" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/button/buttonview.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="174" lean-forward="true" selection-start-line="174" selection-end-line="179" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/panel/balloon/balloonpanelview.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-9535">
+              <caret line="60" column="21" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>_findPositionIn</find>
-      <find>modelToViewPosition</find>
-      <find>_modelToView</find>
-      <find>_modelToViewMapping</find>
-      <find>ViewPosition</find>
       <find>console.</find>
       <find>toViewPosition</find>
+      <find>createContainerElement</find>
+      <find>insertElement</find>
+      <find>downcast</find>
+      <find>new List</find>
+      <find>Panel</find>
+      <find>FloatingPan</find>
+      <find>BalloonPanelView</find>
+      <find>selectPrevious</find>
+      <find>.add</find>
+      <find>.on</find>
+      <find>TreeWalker</find>
+      <find>modifySelection</find>
+      <find>cfg</find>
+      <find>ListView</find>
+      <find>suggestions</find>
+      <find>ListItemView</find>
+      <find>_getBalloonPosition</find>
+      <find>_getBalloonPositionData</find>
+      <find>FocusTracker</find>
+      <find>panelModel</find>
+      <find>model.tex</find>
+      <find>text</find>
+      <find>this.model</find>
+      <find>attachTo</find>
+      <find>listView</find>
+      <find>panel</find>
+      <find>focus</find>
+      <find>.focus</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine</dir>
+      <dir>$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/view</dir>
+      <dir>$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src</dir>
+      <dir>$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/model</dir>
+      <dir>$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui</dir>
+      <dir>$PROJECT_DIR$/node_modules/@ckeditor</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -100,8 +170,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/myPlugin.js" />
         <option value="$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/conversion/downcast-converters.js" />
+        <option value="$PROJECT_DIR$/src/index.js" />
+        <option value="$PROJECT_DIR$/src/myPlugin.js" />
+        <option value="$PROJECT_DIR$/src/ckeditor.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/src/AutocompletePlugin.js" />
       </list>
     </option>
   </component>
@@ -157,7 +231,31 @@
               <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
               <item name="ckeditor5-engine" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="conversion" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-engine" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-paragraph" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-paragraph" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
@@ -172,6 +270,111 @@
               <item name="node_modules" type="462c0819:PsiDirectoryNode" />
               <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
               <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="button" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="editorui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="editorui" type="462c0819:PsiDirectoryNode" />
+              <item name="boxed" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="list" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="panel" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="panel" type="462c0819:PsiDirectoryNode" />
+              <item name="balloon" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="toolbar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-ui" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="toolbar" type="462c0819:PsiDirectoryNode" />
+              <item name="balloon" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-widget" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FilterBoxTest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FilterBoxTest" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="@ckeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="ckeditor5-widget" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -295,39 +498,10 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/view.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
-          <caret line="6" column="34" lean-forward="true" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/myPlugin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ckeditor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#85#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/conversion/downcast-converters.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="491" column="56" selection-start-line="491" selection-start-column="56" selection-end-line="491" selection-end-column="56" />
+          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -337,6 +511,187 @@
           <caret line="453" column="4" selection-start-line="453" selection-start-column="4" selection-end-line="453" selection-end-column="4" />
           <folding>
             <element signature="e#176#222#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-widget/src/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="91" column="16" selection-start-line="91" selection-start-column="16" selection-end-line="91" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/view/containerelement.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="32" column="21" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/view/downcastwriter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="198" column="30" selection-start-line="198" selection-start-column="30" selection-end-line="198" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/conversion/downcast-converters.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1006">
+          <caret line="479" column="16" selection-start-line="479" selection-start-column="16" selection-end-line="479" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-paragraph/src/paragraph.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/dropdown/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="189" column="45" selection-start-line="189" selection-start-column="45" selection-end-line="189" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/toolbar/toolbarview.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/editorui/boxed/boxededitoruiview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-506" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPlugin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="174" column="29" selection-start-line="174" selection-start-column="26" selection-end-line="174" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ckeditor.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="11" lean-forward="true" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-engine/src/view/treewalker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/list/listitemview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="33" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-utils/src/collection.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="137" column="4" selection-start-line="137" selection-start-column="4" selection-end-line="137" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-utils/src/emittermixin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="194" column="21" selection-start-line="194" selection-start-column="21" selection-end-line="194" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/toolbar/balloon/balloontoolbar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2148">
+          <caret line="188" column="70" selection-start-line="188" selection-start-column="47" selection-end-line="188" selection-end-column="70" />
+          <folding>
+            <element signature="e#185#242#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/list/listview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="60" column="39" lean-forward="true" selection-start-line="60" selection-start-column="39" selection-end-line="60" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/view.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1385">
+          <caret line="146" column="23" selection-start-line="146" selection-start-column="23" selection-end-line="146" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/button/buttonview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="174" lean-forward="true" selection-start-line="174" selection-end-line="179" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/panel/balloon/balloonpanelview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-9535">
+          <caret line="60" column="21" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@ckeditor/ckeditor5-ui/src/focuscycler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="251" column="43" selection-start-line="251" selection-start-column="37" selection-end-line="251" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AutocompletePlugin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="72" column="41" selection-start-line="72" selection-start-column="41" selection-end-line="72" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -5,6 +5,7 @@ import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
 import MyPlugin from './myPlugin';
+import AutocompletePlugin from './AutocompletePlugin';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -14,7 +15,8 @@ ClassicEditor.builtinPlugins = [
     BoldPlugin,
     ItalicPlugin,
     ParagraphPlugin,
-    MyPlugin
+    MyPlugin,
+    AutocompletePlugin
 ];
 
 ClassicEditor.defaultConfig = {
