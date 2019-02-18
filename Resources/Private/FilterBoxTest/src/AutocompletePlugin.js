@@ -13,35 +13,22 @@ import {addListToDropdown, createDropdown} from '@ckeditor/ckeditor5-ui/src/drop
 
 import ListView from '@ckeditor/ckeditor5-ui/src/list/listview';
 import BalloonPanelView from "@ckeditor/ckeditor5-ui/src/panel/balloon/balloonpanelview";
+import KeystrokeHandler from "@ckeditor/ckeditor5-utils/src/keystrokehandler";
 
 export default class AutocompletePlugin extends Plugin {
-    static get requires() {
-        return [];
-    }
-
     init() {
-        this._setupUi();
+        this.listView = this._setupList();
 
         this.editor.model.document.on('change', () => this._check());
     }
 
-    /**
-     * TODO
-     */
-    _setupUi() {
-        this.listView = this._setupList();
-    }
-
-    /**
-     * TODO
-     */
     _setupList() {
-        const editor = this.editor;
-
         const listView = new ListView();
-        editor.ui.view.body.add(listView);
+        this.editor.ui.view.body.add(listView);
 
-        editor.editing.view.document.on('keydown', (evt, domEvt) => {
+        // Allow focusing the ListView if it is open right now.
+        this.editor.editing.view.document.on('keydown', (evt, domEvt) => {
+            // TODO enable condition
             /*if (!listModel.isOn) {
                 return;
             }*/
@@ -51,7 +38,6 @@ export default class AutocompletePlugin extends Plugin {
             if (keyCode === 40) {
                 listView.focus();
             }
-
         });
 
         return listView;
@@ -71,7 +57,9 @@ export default class AutocompletePlugin extends Plugin {
 
         // "A s#ample @text."
         // TODO! does not fully work yet.
-        const selText = sel.focus.textNode ? sel.focus.textNode.data : null;
+        console.log("sel.focus", sel.focus.isAtEnd, sel.focus.nodeBefore, sel.focus.textNode);
+        const node = sel.focus.isAtEnd ? sel.focus.nodeBefore : sel.focus.textNode;
+        const selText = node && node.data ? node.data : null;
         const selOffset = sel.focus.offset;
 
         this.listView.items.clear();
@@ -83,7 +71,6 @@ export default class AutocompletePlugin extends Plugin {
 
         let lastTrigger = null;
         let lastTriggerIndex = -1;
-
 
 
         for (let c in cfg) {
@@ -124,29 +111,31 @@ export default class AutocompletePlugin extends Plugin {
         }
 
 
-        cfg[ lastTrigger ]
-            .filter( sugText => {
+        cfg[lastTrigger]
+            .filter(sugText => {
                 return true;
-                if ( text === lastTrigger ) {
+                if (text === lastTrigger) {
                     return true;
                 } else {
-                    return sugText !== text && sugText.indexOf( text ) === 0;
+                    return sugText !== text && sugText.indexOf(text) === 0;
                 }
 
-            } )
+            })
             .sort()
-            .forEach( sugText => {
-                console.log( `	[i] Suggestion "${ sugText }" found.` );
+            .forEach(sugText => {
+                console.log(`	[i] Suggestion "${sugText}" found.`);
 
-                const li = new AutocompleteListItem(sugText);
+                const li = new AutocompleteListItem(sugText, () => {
+                    console.log("ON ACTIVATE", sugText);
+                });
 
                 // It's very, very memory-inefficient. But it's a PoC, so...
                 this.listView.items.add(li);
 
-            } );
+            });
 
 
-        const selRect = document.defaultView.getSelection().getRangeAt( 0 ).getBoundingClientRect();
+        const selRect = document.defaultView.getSelection().getRangeAt(0).getBoundingClientRect();
         const bodyRect = document.body.getBoundingClientRect();
 
         this.listView.element.style.display = 'block';
@@ -158,10 +147,15 @@ export default class AutocompletePlugin extends Plugin {
 }
 
 class AutocompleteListItem extends View {
-    constructor(label) {
+    constructor(label, onActivateFn) {
         super();
 
-        this.setTemplate( {
+        this.keystrokes = new KeystrokeHandler();
+        this.keystrokes.set('enter', () => {
+            onActivateFn();
+        })
+
+        this.setTemplate({
             tag: 'li',
             // The FocusCycler expects a tabindex to be set.
             attributes: {
@@ -169,7 +163,12 @@ class AutocompleteListItem extends View {
             },
 
             children: [label]
-        } );
+        });
+    }
+
+    render() {
+        super.render();
+        this.keystrokes.listenTo( this.element );
     }
 
     /**
