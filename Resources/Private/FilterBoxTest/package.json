@@ -16,5 +16,13 @@
     "style-loader": "^0.23.1",
     "webpack": "4",
     "webpack-cli": "3"
+  },
+  "devDependencies": {
+    "babel-jest": "^24.1.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "jest": "^24.1.0"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
