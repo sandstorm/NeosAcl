@@ -7,7 +7,7 @@ ClassicEditor
         console.log( 'Editor was initialized', editor );
         editor.setData(
 			'<p>foobar</p>' +
-			'<div class="widget"><div class="nested">bar</div></div>' +
+			'<div class="widget" data-function="myFn"><div class="nested">bar</div></div>' +
 			'<p>foobar</p>'
 )
     } )

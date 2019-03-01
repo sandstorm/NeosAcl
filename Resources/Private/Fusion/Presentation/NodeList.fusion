@@ -25,7 +25,7 @@ prototype(Sandstorm.NeosAcl:Presentation.NodeList) < prototype(Neos.Fusion:Compo
                         <Sandstorm.NeosAcl:Presentation.NodeList.NodeRow node={rootNode} />
                     </Neos.Fusion:Loop>
 
-                    <Neos.Fusion:Value @if.noNodes={!nodes} @children="value">
+                    <Neos.Fusion:Value @if.noNodes={!props.nodes} @children="value">
                         <tr><td colspan="4">No nodes found</td></tr>
                     </Neos.Fusion:Value>
                 </tbody>

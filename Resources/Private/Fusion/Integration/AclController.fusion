@@ -7,11 +7,14 @@ prototype(Sandstorm.NeosAcl:Controller.Acl.Index) < prototype(Neos.Fusion:Compon
         <Sandstorm.NeosAcl:Integration.StylesAndScripts />
 
         <div class="neos-content neos-container-fluid">
-            <Sandstorm.NeosAcl:Integration.Form dto={dto} nodes={nodes} roles={roles} />
+            <Sandstorm.NeosAcl:Integration.Form dto={props.dto} nodes={props.nodes} roles={props.roles} />
 
         </div>
         <Sandstorm.NeosAcl:Presentation.NodeList nodes={props.nodes} />
     `
+
+    @process.debugDump = Neos.Fusion:DebugDump
+
 }
 
 /*

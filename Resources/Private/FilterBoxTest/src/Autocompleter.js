@@ -2,21 +2,52 @@ import ListView from "@ckeditor/ckeditor5-ui/src/list/listview";
 import View from "@ckeditor/ckeditor5-ui/src/view";
 import KeystrokeHandler from "@ckeditor/ckeditor5-utils/src/keystrokehandler";
 
+const nodeIsInsideNode = (nodeName, node) => {
+    if (node.name === nodeName) {
+        return true;
+    } else if (!node.parent) {
+        return false;
+    }
+
+    return nodeIsInsideNode(nodeName, node.parent);
+};
+
 export default function createAutocomplete(editor) {
     const suggestionView = new ListView();
     editor.ui.view.body.add(suggestionView);
 
     focusAutocompleteSuggestionsIfOpenOnKeyDown(suggestionView, editor);
-    editor.model.document.on('change', runAutocompleteOnDocumentChange({
-        'isDescendantNodeOf': {},
-        'isAncestorNodeOf': {},
-        'isAncestorOrDescendantNodeOf': {},
-        'nodeIsOfType': {},
-        'createdNodeIsOfType': {},
-        'isInWorkspace': {},
-        'nodePropertyIsIn': {},
-        'isInDimensionPreset': {},
-    }, suggestionView, editor));
+
+    const topLevelKeywords = [
+        'isDescendantNodeOf',
+        'isAncestorNodeOf',
+        'isAncestorOrDescendantNodeOf',
+        'nodeIsOfType',
+        'createdNodeIsOfType',
+        'isInWorkspace',
+        'nodePropertyIsIn',
+        'isInDimensionPreset'
+    ];
+
+    const nodeTypes = [
+        'Neos.Neos:Foo',
+        'Neos.Neos:Bar',
+        'Neos.Neos:Hurz'
+    ];
+
+    const generateKeywords = (node, currentWord) => {
+        if (nodeIsInsideNode('widget', node)) {
+            return Promise.resolve(nodeTypes.filter(keyword =>
+                keyword.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1
+            ));
+        }
+
+        return Promise.resolve(topLevelKeywords.filter(keyword =>
+            keyword.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1
+        ));
+    };
+
+    editor.model.document.on('change', runAutocompleteOnDocumentChange(generateKeywords, suggestionView, editor));
 }
 
 function focusAutocompleteSuggestionsIfOpenOnKeyDown(suggestionView, editor) {
@@ -34,7 +65,7 @@ function focusAutocompleteSuggestionsIfOpenOnKeyDown(suggestionView, editor) {
     });
 }
 
-function runAutocompleteOnDocumentChange(keywords, suggestionView, editor) {
+function runAutocompleteOnDocumentChange(generateKeywords, suggestionView, editor) {
     return () => {
         // A s#ample @te^xt.
         const selection = editor.model.document.selection;
@@ -43,6 +74,7 @@ function runAutocompleteOnDocumentChange(keywords, suggestionView, editor) {
         const node = selection.focus.isAtEnd
             ? selection.focus.nodeBefore
             : selection.focus.textNode;
+
         const textUnderSelection = node && node.data ? node.data : null;
         const selectionOffset = selection.focus.offset;
 
@@ -53,21 +85,44 @@ function runAutocompleteOnDocumentChange(keywords, suggestionView, editor) {
         }
 
         const currentWord = extractCurrentWord(textUnderSelection, selectionOffset);
+        const [lengthOfWordBeforeSelection, lengthOfWordAfterSelection] = lengthOfWordBeforeAndAfterSelection(textUnderSelection, selectionOffset);
 
-        console.log("CW", currentWord);
+        const nodeIsInsideWidget = nodeIsInsideNode('widget', node);
+        generateKeywords(node, currentWord).then(keywords =>
+            keywords.forEach(keyword => {
+                const li = new AutocompleteListItem(keyword, () => {
+                    const currentPosition = editor.model.document.selection.focus;
 
-        Object.entries(keywords).filter(([keyword, _]) =>
-            keyword.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1
-        ).forEach(([keyword, _]) => {
-            const li = new AutocompleteListItem(keyword, () => {
-                
+                    const startPosition = currentPosition.getShiftedBy(-lengthOfWordBeforeSelection);
+                    const rangeOfCurrentWord = editor.model.createRange(
+                        startPosition,
+                        currentPosition.getShiftedBy(lengthOfWordAfterSelection)
+                    );
 
-                console.log("ON ACTIVATE", keyword);
-            });
+                    editor.model.change(writer => {
+                        writer.remove(rangeOfCurrentWord);
+                        if (nodeIsInsideWidget) {
+                            console.log("NODE INSIDE NODE");
+                            editor.model.insertContent(writer.createText(keyword));
+                        } else {
+                            const w = writer.createElement('widget', {
+                                functionName: keyword
+                            });
 
-            // It's very, very memory-inefficient. But it's a PoC, so...
-            suggestionView.items.add(li);
-        });
+                            const nested = writer.createElement( 'nested' );
+                            writer.insert( nested, w, 0 );
+                            editor.model.insertContent(w, startPosition);
+                        }
+                    });
+
+                    // TODO does not seem to work?
+                    // suggestionView.items.clear();
+                });
+
+                // It's very, very memory-inefficient. But it's a PoC, so...
+                suggestionView.items.add(li);
+            })
+        );
 
         const selRect = document.defaultView.getSelection().getRangeAt(0).getBoundingClientRect();
         const bodyRect = document.body.getBoundingClientRect();
@@ -86,8 +141,6 @@ export function extractCurrentWord(textUnderSelection, selectionOffset) {
     const preceding = textUnderSelection.substr(0, selectionOffset);
     const following = textUnderSelection.substr(selectionOffset);
 
-    console.log(preceding, following);
-
     const previousWordResult = preceding.match(EXTRACT_LAST_WORD);
     const nextWordResult = following.match(EXTRACT_FIRST_WORD);
 
@@ -101,6 +154,25 @@ export function extractCurrentWord(textUnderSelection, selectionOffset) {
     }
 
     return word;
+}
+
+export function lengthOfWordBeforeAndAfterSelection(textUnderSelection, selectionOffset) {
+    const preceding = textUnderSelection.substr(0, selectionOffset);
+    const following = textUnderSelection.substr(selectionOffset);
+
+    const previousWordResult = preceding.match(EXTRACT_LAST_WORD);
+    const nextWordResult = following.match(EXTRACT_FIRST_WORD);
+
+    const lengthBeforeAndAfter = [0, 0];
+    if (previousWordResult) {
+        lengthBeforeAndAfter[0] = previousWordResult[0].length;
+    }
+
+    if (nextWordResult) {
+        lengthBeforeAndAfter[1] = nextWordResult[0].length;
+    }
+
+    return lengthBeforeAndAfter
 }
 
 
@@ -126,7 +198,7 @@ class AutocompleteListItem extends View {
 
     render() {
         super.render();
-        this.keystrokes.listenTo( this.element );
+        this.keystrokes.listenTo(this.element);
     }
 
     /**

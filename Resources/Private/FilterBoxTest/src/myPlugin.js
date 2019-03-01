@@ -12,7 +12,7 @@ import {addListToDropdown, createDropdown} from '@ckeditor/ckeditor5-ui/src/drop
 
 
 class SampleInputView extends View {
-    constructor(locale) {
+    constructor(editor, modelItem, locale) {
         super(locale);
 
         // An entry point to binding observables with DOM attributes,
@@ -54,14 +54,16 @@ class SampleInputView extends View {
         addListToDropdown(dropdownView, items);
 
         dropdownView.on('execute', (event) => {
-            console.log("CALL", event, event.source.label, event.source.myId);
-            console.log("XX", dropdownView.buttonView);
-
+            // TODO: use "downcastAttributeToAttribute" or so? https://github.com/ckeditor/ckeditor5-engine/blob/69dcab556fce0ce2ca7a6e6cd2f926cd7c971031/src/conversion/downcast-converters.js#L158-L211
             dropdownView.buttonView.label = event.source.label;
+
+            editor.model.change(writer => {
+                writer.setAttribute('functionName', event.source.label, modelItem);
+            });
         });
 
         dropdownView.buttonView.withText = true;
-        dropdownView.buttonView.label = "Hallo42";
+        dropdownView.buttonView.label = modelItem.getAttribute('functionName');
 
         this.setTemplate({
             tag: 'div',
@@ -111,6 +113,7 @@ export default class MyPlugin extends Plugin {
 
         model.schema.register('widget', {
             inheritAllFrom: '$block',
+            allowAttributes: ['functionName'],
             isObject: true
         });
 
@@ -137,6 +140,7 @@ export default class MyPlugin extends Plugin {
                 }
             }));
 
+        const editor = this.editor;
         this.editor.conversion.for('editingDowncast')
             .add(dispatcher => {
                 const insertViewElement = insertElement(
@@ -146,7 +150,7 @@ export default class MyPlugin extends Plugin {
                             const domElement = this.toDomElement(domDocument);
 
                             // HINT: we are rendering a view here inside a Widget :)
-                            const view = new SampleInputView();
+                            const view = new SampleInputView(editor, modelItem);
                             view.render();
 
                             domElement.appendChild(view.element);
@@ -199,7 +203,9 @@ export default class MyPlugin extends Plugin {
                     name: 'div',
                     class: 'widget'
                 },
-                model: 'widget'
+                model: (viewElement, modelWriter) => {
+                    return modelWriter.createElement('widget', {functionName: viewElement.getAttribute('data-function')});
+                }
             }))
             .add(upcastElementToElement({
                 view: {

@@ -18,7 +18,7 @@
             <f:for each="{roles}" as="role" iteration="it">
                 <div class="neos-controls">
                     <label for="roles-{it.cycle}" class="neos-checkbox">
-                        <f:form.textfield id="roles-{it.cycle}" type="checkbox" property="roles.{it.cycle}"
+                        <f:form.checkbox id="roles-{it.cycle}" multiple="true" property="roles"
                                           value="{role.identifier}"/>
                         <span></span>
                         {role.name} <span class="neos-help-inline">({role.identifier})</span>

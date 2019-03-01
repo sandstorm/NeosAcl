@@ -1,0 +1,35 @@
+<f:layout name="Default" />
+
+<f:section name="Title">New dynamic role</f:section>
+
+<f:section name="Content">
+    <p>Just fill out the following form to create a new dynamic role:</p>
+
+    <f:form action="create" objectName="newDynamicRole">
+        <ol>
+            <li>
+                <label for="name">Name</label>
+                <f:form.textfield property="name" id="name" />
+            </li>
+        
+            <li>
+                <label for="abstract">Abstract</label>
+                <f:form.textfield property="abstract" id="abstract" />
+            </li>
+        
+            <li>
+                <label for="parentRoleNames">Parent role names</label>
+                <f:form.textfield property="parentRoleNames" id="parentRoleNames" />
+            </li>
+        
+            <li>
+                <label for="privileges">Privileges</label>
+                <f:form.textfield property="privileges" id="privileges" />
+            </li>
+        
+            <li>
+                <f:form.submit value="Create" />
+            </li>
+        </ol>
+    </f:form>
+</f:section>

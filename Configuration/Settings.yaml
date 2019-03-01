@@ -13,3 +13,13 @@ Neos:
                 label: 'ACL Inspector'
                 title: 'ACL Inspector'
             privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.ACLInspector'
+          dynamicRoles:
+            label: 'Dynamic Roles'
+            controller: 'Sandstorm\NeosAcl\Controller\Module\DynamicRoleController'
+            description: 'Module to check the acl'
+            icon: 'icon-lock'
+            actions:
+              index:
+                label: 'Dynamic Roles'
+                title: 'Dynamic Roles'
+            privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.DynamicRoles'

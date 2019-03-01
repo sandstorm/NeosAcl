@@ -31,11 +31,12 @@ prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow) < prototype(Neos.Fusi
 }
 
 prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl) < prototype(Neos.Fusion:Case) {
+    ignoreProperties = ${['acl']}
     @context.acl = ${this.acl}
 
     moreThanThreeAcls {
         condition = ${Array.length(acl) > 3}
-        element = Neos.Fusion:Component {
+        renderer = Neos.Fusion:Component {
             acl = ${acl}
             renderer = afx`
                 <div class="acl-data" style="display: none">
@@ -50,7 +51,7 @@ prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl) < prototype(Neos.
 
     default {
         condition = true
-        element = Neos.Fusion:Component {
+        renderer = Neos.Fusion:Component {
             acl = ${acl}
             renderer = afx`
                 <Neos.Fusion:Loop items={props.acl} itemName="checks" itemKey="roleIdentifier" @children="itemRenderer">
@@ -62,7 +63,7 @@ prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl) < prototype(Neos.
 }
 
 
-prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl) < prototype(Neos.Fusion:Component) {
+prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Checks) < prototype(Neos.Fusion:Component) {
     checks = null
     nodeIdentifier = null
 
@@ -82,12 +83,7 @@ prototype(Sandstorm.NeosAcl:Presentation.NodeList.NodeRow.Acl.Icon) < prototype(
     value = null
 
     renderer = afx`
-        <Neos.Fusion:Value @if.valueTrue={props.value} @children="value">
-            <i class="icon-nodeCheck icon-green fa-check"></i>
-        </Neos.Fusion:Value>
-
-        <Neos.Fusion:Value @if.valueFalse={!props.value} @children="value">
-            <i class="icon-nodeCheck icon-red fa-times"></i>
-        </Neos.Fusion:Value>
+        <i class="icon-nodeCheck icon-green fa-check" @if.valueTrue={props.value}>TRUE</i>
+        <i class="icon-nodeCheck icon-red fa-times" @if.valueFalse={!props.value}>FALSE</i>
     `
 }

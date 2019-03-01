@@ -1,0 +1,33 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Edit dynamic role "{dynamicRole.name}"</f:section>
+
+<f:section name="Content">
+    <f:form action="update" object="{dynamicRole}" objectName="dynamicRole">
+        <ol>
+            <li>
+                <label for="name">Name</label>
+                <f:form.textfield property="name" id="name" />
+            </li>
+        
+            <li>
+                <label for="abstract">Abstract</label>
+                <f:form.textfield property="abstract" id="abstract" />
+            </li>
+        
+            <li>
+                <label for="parentRoleNames">Parent role names</label>
+                <f:form.textfield property="parentRoleNames" id="parentRoleNames" />
+            </li>
+        
+            <li>
+                <label for="privileges">Privileges</label>
+                <f:form.textfield property="privileges" id="privileges" />
+            </li>
+        
+            <li>
+                <f:form.submit value="Update" />
+            </li>
+        </ol>
+    </f:form>
+</f:section>

@@ -6,6 +6,15 @@ privilegeTargets:
   'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
     'Sandstorm.NeosAcl:Backend.Module.ACLInspector':
       matcher: 'method(Sandstorm\NeosAcl\Controller\Module\ACLInspectorController->(index|show)Action())'
+    'Sandstorm.NeosAcl:Backend.Module.DynamicRoles':
+      matcher: 'method(Sandstorm\NeosAcl\Controller\Module\DynamicRoleController->(index|show|create|new|update|remove|edit)Action())'
+
+  'Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege':
+    # this privilegeTarget is defined to switch to a "whitelist" approach
+    'Sandstorm.NeosAcl:EditAllNodes':
+      matcher: 'TRUE'
+#    'Dynamic:Foo':
+#      matcher: 'isDescendantNodeOf("a3474e1d-dd60-4a84-82b1-18d2f21891a3")'
 
 roles:
   'Neos.Neos:Administrator':
@@ -13,3 +22,17 @@ roles:
       -
         privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.ACLInspector'
         permission: GRANT
+      -
+        privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.DynamicRoles'
+        permission: GRANT
+      -
+        privilegeTarget: 'Sandstorm.NeosAcl:EditAllNodes'
+        permission: GRANT
+  'Neos.Neos:Editor':
+      privileges:
+      - privilegeTarget: 'Sandstorm.NeosAcl:EditAllNodes'
+        permission: GRANT
+#  'Dynamic:Foo2':
+#    privileges:
+#      - privilegeTarget: 'Dynamic:Foo'
+#        permission: GRANT

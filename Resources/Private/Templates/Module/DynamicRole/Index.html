@@ -1,0 +1,25 @@
+<f:layout name="Default" />
+
+<f:section name="Title">A list of dynamic roles</f:section>
+
+<f:section name="Content">
+    <f:if condition="{dynamicRoles}">
+        <f:then>
+            <ul>
+                <f:for each="{dynamicRoles}" as="dynamicRole">
+                    <li>
+                        <f:link.action action="show" arguments="{dynamicRole: dynamicRole}">{dynamicRole.name}</f:link.action>
+                        <f:link.action action="edit" arguments="{dynamicRole: dynamicRole}">Edit</f:link.action>
+                        <f:form action="delete" arguments="{dynamicRole: dynamicRole}">
+                            <f:form.submit value="Delete" />
+                        </f:form>
+                    </li>
+                </f:for>
+            </ul>
+        </f:then>
+        <f:else>
+            <p>No dynamic roles created yet.</p>
+        </f:else>
+    </f:if>
+    <p><f:link.action action="new">Create a new dynamic role</f:link.action></p>
+</f:section>

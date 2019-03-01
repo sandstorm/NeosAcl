@@ -74,6 +74,7 @@ class ACLCheckerService
         $checkedNodes = [];
 
         foreach ($roles as $role) {
+            var_dump("ROLE" . $role);
             /** @var Role $role */
             $checkedNodes[$role->getIdentifier()] = [
                 'editNode' => $this->privilegeManager->isGrantedForRoles([$role], EditNodePrivilege::class, new NodePrivilegeSubject($node)),
