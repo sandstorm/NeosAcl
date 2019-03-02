@@ -23,3 +23,8 @@ Neos:
                 label: 'Dynamic Roles'
                 title: 'Dynamic Roles'
             privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.DynamicRoles'
+
+Sandstorm:
+  NeosAcl:
+    reactDevelopmentMode: true
+    reactDevelopmentServerIpAndPort: 127.0.0.1:3000

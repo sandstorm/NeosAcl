@@ -36,7 +36,7 @@ export default function createAutocomplete(editor) {
     ];
 
     const generateKeywords = (node, currentWord) => {
-        if (nodeIsInsideNode('widget', node)) {
+        if (nodeIsInsideNode('matcherFunction', node)) {
             return Promise.resolve(nodeTypes.filter(keyword =>
                 keyword.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1
             ));
@@ -87,7 +87,7 @@ function runAutocompleteOnDocumentChange(generateKeywords, suggestionView, edito
         const currentWord = extractCurrentWord(textUnderSelection, selectionOffset);
         const [lengthOfWordBeforeSelection, lengthOfWordAfterSelection] = lengthOfWordBeforeAndAfterSelection(textUnderSelection, selectionOffset);
 
-        const nodeIsInsideWidget = nodeIsInsideNode('widget', node);
+        const nodeIsInsideWidget = nodeIsInsideNode('matcherFunction', node);
         generateKeywords(node, currentWord).then(keywords =>
             keywords.forEach(keyword => {
                 const li = new AutocompleteListItem(keyword, () => {
@@ -105,12 +105,9 @@ function runAutocompleteOnDocumentChange(generateKeywords, suggestionView, edito
                             console.log("NODE INSIDE NODE");
                             editor.model.insertContent(writer.createText(keyword));
                         } else {
-                            const w = writer.createElement('widget', {
+                            const w = writer.createElement('matcherFunction', {
                                 functionName: keyword
                             });
-
-                            const nested = writer.createElement( 'nested' );
-                            writer.insert( nested, w, 0 );
                             editor.model.insertContent(w, startPosition);
                         }
                     });

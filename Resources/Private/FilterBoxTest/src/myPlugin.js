@@ -1,14 +1,14 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import Widget from '@ckeditor/ckeditor5-widget/src/widget';
-import {toWidget, toWidgetEditable} from '@ckeditor/ckeditor5-widget/src/utils';
-import {downcastElementToElement, insertElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
+import { toWidget, toWidgetEditable } from '@ckeditor/ckeditor5-widget/src/utils';
+import { downcastElementToElement, insertElement } from '@ckeditor/ckeditor5-engine/src/conversion/downcasthelpers';
 import ViewPosition from '@ckeditor/ckeditor5-engine/src/view/position';
-import {upcastElementToElement} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
+//import {upcastElementToElement} from '@ckeditor/ckeditor5-engine/src/conversion/upcasthelpers';
 import View from '@ckeditor/ckeditor5-ui/src/view';
 
 import Model from '@ckeditor/ckeditor5-ui/src/model';
 import Collection from '@ckeditor/ckeditor5-utils/src/collection';
-import {addListToDropdown, createDropdown} from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
+import { addListToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 
 
 class SampleInputView extends View {
@@ -101,7 +101,8 @@ export default class MyPlugin extends Plugin {
     }
 
     init() {
-        this.editor.conversion.elementToElement({model: 'paragraph', view: 'span', converterPriority: 'high'});
+        this.editor.conversion.elementToElement({ model: 'paragraph', view: 'span', converterPriority: 'high' });
+
         console.log("this.editor", this.editor);
 
         /*this.editor.editing.downcastDispatcher.on('insert', ( evt, data, conversionApi ) => {
@@ -111,22 +112,46 @@ export default class MyPlugin extends Plugin {
 
         const model = this.editor.model;
 
-        model.schema.register('widget', {
+        model.schema.register('matcherFunction', {
             inheritAllFrom: '$block',
             allowAttributes: ['functionName'],
             isObject: true
         });
 
         model.schema.extend('$text', {
-            allowIn: 'nested'
+            allowIn: 'matcherFunctionParameter'
         });
 
-        model.schema.register('nested', {
-            allowIn: 'widget',
+        model.schema.register('matcherFunctionParameter', {
+            allowIn: 'matcherFunction',
             isLimit: true
         });
 
-        this.editor.conversion.for('dataDowncast')
+        this.editor.conversion.elementToElement(({
+            model: 'matcherFunction',
+            view: {
+                name: 'span',
+                classes: 'matcherFunction'
+            }
+        }));
+
+        this.editor.conversion.attributeToAttribute(({
+            model: 'functionName',
+            view: 'data-name'
+        }));
+
+        this.editor.conversion.elementToElement(({
+            model: 'matcherFunctionParameter',
+            view: {
+                name: 'span',
+                classes: 'matcherFunctionParameter'
+            }
+        }));
+
+        this.editor.model.document.registerPostFixer( writer => insertMissingFunctionArgument( this.editor.model, writer ) );
+        this.editor.model.document.registerPostFixer( writer => insertMissingParagraphArgument( this.editor.model, writer ) );
+
+        /*this.editor.conversion.for('dataDowncast')
             .add(downcastElementToElement({
                 model: 'widget',
                 view: (modelItem, writer) => {
@@ -142,7 +167,7 @@ export default class MyPlugin extends Plugin {
 
         const editor = this.editor;
         this.editor.conversion.for('editingDowncast')
-            .add(dispatcher => {
+            /*.add(dispatcher => {
                 const insertViewElement = insertElement(
                     (modelItem, writer) => {
                         const div = writer.createContainerElement('div', {class: 'widget'});
@@ -215,6 +240,119 @@ export default class MyPlugin extends Plugin {
                 model: 'nested'
             }));
 
-        ;
+        ;*/
     }
+}
+
+
+/**
+	 * Checks whether the data inserted to the model document have an image element that has no caption element inside it.
+	 * If there is none, it adds it to the image element.
+	 *
+	 * @private
+	 * @param {module:engine/model/writer~Writer} writer The writer to make changes with.
+	 * @returns {Boolean} `true` if any change was applied, `false` otherwise.
+	 */
+	function insertMissingFunctionArgument( model, writer ) {
+		const changes = model.document.differ.getChanges();
+
+		const matcherFunctionsWithoutParameters = [];
+
+		for ( const entry of changes ) {
+			if ( entry.type == 'insert' && entry.name != '$text' ) {
+				const item = entry.position.nodeAfter;
+
+				if ( item.is( 'matcherFunction' ) && !getFunctionParameterFromMatcherFunction( item ) ) {
+					matcherFunctionsWithoutParameters.push( item );
+				}
+
+				// Check elements with children for nested matcherFunctions.
+				if ( !item.is( 'matcherFunction' ) && item.childCount ) {
+					for ( const nestedItem of model.createRangeIn( item ).getItems() ) {
+						if ( nestedItem.is( 'matcherFunction' ) && !getFunctionParameterFromMatcherFunction( nestedItem ) ) {
+							matcherFunctionsWithoutParameters.push( nestedItem );
+						}
+					}
+				}
+			}
+		}
+
+		for ( const image of matcherFunctionsWithoutParameters ) {
+            const parameter = writer.createElement( 'matcherFunctionParameter' );
+            writer.appendText('X', parameter);
+            writer.insert(parameter, image, 'end');
+		}
+
+		return !!matcherFunctionsWithoutParameters.length;
+}
+
+
+function getFunctionParameterFromMatcherFunction( matcherFunctionModelElement ) {
+	for ( const node of matcherFunctionModelElement.getChildren() ) {
+		if ( !!node && node.is( 'matcherFunctionParameter' ) ) {
+			return node;
+		}
+	}
+
+	return null;
+}
+
+
+function insertMissingParagraphArgument( model, writer ) {
+    const changes = model.document.differ.getChanges();
+
+    const matcherFunctionsWithoutPreviousParagraph = [];
+    const matcherFunctionsWithoutNextParagraph = [];
+
+    for ( const entry of changes ) {
+        if ( entry.type == 'insert' && entry.name != '$text' ) {
+            const item = entry.position.nodeAfter;
+
+            if ( item.is( 'matcherFunction' ) && !isParagraphSibling(item.previousSibling) ) {
+                matcherFunctionsWithoutPreviousParagraph.push( item );
+            }
+
+            if ( item.is( 'matcherFunction' ) && !isParagraphSibling(item.nextSibling) ) {
+                matcherFunctionsWithoutNextParagraph.push( item );
+            }
+
+            // Check elements with children for nested matcherFunctions.
+            if ( !item.is( 'matcherFunction' ) && item.childCount ) {
+                for ( const nestedItem of model.createRangeIn( item ).getItems() ) {
+
+                    if ( nestedItem.is( 'matcherFunction' ) && !isParagraphSibling(nestedItem.previousSibling) ) {
+                        matcherFunctionsWithoutPreviousParagraph.push( nestedItem );
+                    }
+
+                    if ( nestedItem.is( 'matcherFunction' ) && !isParagraphSibling(nestedItem.nextSibling) ) {
+                        matcherFunctionsWithoutNextParagraph.push( nestedItem );
+                    }
+                }
+            }
+        }
+    }
+
+    for ( const matcherFunction of matcherFunctionsWithoutPreviousParagraph ) {
+        if (!isParagraphSibling(matcherFunction.previousSibling)) {
+            const parameter = writer.createElement( 'paragraph' );
+            writer.insert(parameter, matcherFunction, 'before');
+        }
+    }
+
+    for ( const matcherFunction of matcherFunctionsWithoutNextParagraph ) {
+        if (!isParagraphSibling(matcherFunction.nextSibling)) {
+            const parameter = writer.createElement( 'paragraph' );
+            writer.insert(parameter, matcherFunction, 'after');
+        }
+    }
+
+    return !!matcherFunctionsWithoutNextParagraph.length && !!matcherFunctionsWithoutPreviousParagraph.length;
+}
+
+
+function isParagraphSibling(nodeOrElement) {
+    if (!nodeOrElement) {
+        return false;
+    }
+    return nodeOrElement.is('paragraph');
 }
