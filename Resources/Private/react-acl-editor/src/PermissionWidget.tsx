@@ -40,7 +40,7 @@ function reducer(state: State, action: Action): State {
     }
 }
 
-export default function PermissionWidget({ }) {
+export default function PermissionWidget({}) {
     const [state, dispatch] = useReducer(reducer, initialState);
     return (
         <PermissionList

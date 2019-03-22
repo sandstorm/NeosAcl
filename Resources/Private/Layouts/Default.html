@@ -1,24 +1,17 @@
 {namespace neosAcl = Sandstorm\NeosAcl\ViewHelpers}
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title><f:render section="Title" /></title>
 
-        <f:if condition="{settings.reactDevelopmentMode}">
-            <f:then>
-                <neosAcl:developmentReactResource url="{settings.reactDevelopmentServerIpAndPort}" />
+<f:flashMessages class="flashmessages"/>
 
-            </f:then>
-            <f:else>
-                <script src="{neosAcl:compiledReactResource(fileType: 'js')}"></script>
-            </f:else>
-        </f:if>
-    </head>
-    <body>
-        <f:flashMessages class="flashmessages" />
+<h1>
+    <f:render section="Title"/>
+</h1>
+<f:render section="Content"/>
 
-        <h1><f:render section="Title" /></h1>
-        <f:render section="Content" />
-    </body>
-</html>
+<f:if condition="{settings.reactDevelopmentMode}">
+    <f:then>
+        <neosAcl:developmentReactResource url="{settings.reactDevelopmentServerIpAndPort}"/>
+    </f:then>
+    <f:else>
+        <script src="../../Public/React/static/js/main.js"></script>
+    </f:else>
+</f:if>

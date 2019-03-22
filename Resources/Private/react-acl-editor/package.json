@@ -1,5 +1,5 @@
 {
-  "name": "react-filter-box-adjusted",
+  "name": "react-acl-editor",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,11 +15,12 @@
     "react-dom": "^16.8.3",
     "react-scripts": "2.1.5",
     "react-select": "^2.4.1",
+    "rewire": "^4.0.1",
     "typescript": "3.3.3333"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "./scripts/build-non-split.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
