@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Constraint, ConstraintType, NodeType } from '../types';
 import NodeTypeSelector from './NodeTypeSelector';
+import NodeSelector from "./NodeSelector";
 
 function Workspace() {
     return <div>WS</div>
@@ -15,7 +16,11 @@ function permissionRenderer(props: PermissionComponentProps): React.ReactElement
         case "isDescendantNodeOf":
         case "isAncestorNodeOf":
         case "isAncestorOrDescendantNodeOf":
-            return <Node />;
+            return <NodeSelector
+                nodeSearchEndpoint={props.nodeSearchEndpoint}
+                value={props.constraint.value}
+                onParameterChange={props.onParameterChange}
+            />;
         case "nodeIsOfType":
         case "createdNodeIsOfType":
         case "isInDimensionPreset":
@@ -35,6 +40,7 @@ function permissionRenderer(props: PermissionComponentProps): React.ReactElement
 interface PermissionComponentProps {
     constraint: Constraint;
     nodeTypes: NodeType[];
+    nodeSearchEndpoint: string;
     onParameterChange: (value: string) => void;
 }
 

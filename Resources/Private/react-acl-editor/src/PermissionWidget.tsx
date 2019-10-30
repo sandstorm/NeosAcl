@@ -40,14 +40,19 @@ function reducer(state: State, action: Action): State {
     }
 }
 
-export default function PermissionWidget({}) {
-    const [state, dispatch] = useReducer(reducer, initialState);
+export default function PermissionWidget({name, value, nodeTypes, nodeSearchEndpoint}) {
+    const initialValue = (value ? JSON.parse(value) : initialState);
+    const [state, dispatch] = useReducer(reducer, initialValue);
     return (
-        <PermissionList
-            constraints={state.constraints}
-            onConstraintAdd={(functionType) => dispatch({ type: 'add', constraintType: functionType })}
-            onConditionParameterChange={(conditionIndex, value) => dispatch({ type: 'setParameter', conditionIndex: conditionIndex, value })}
-            nodeTypes={[{ value: "NT1", label: "Node Type 1" }, { value: "NT2", label: "Node Type 2" }]}
-        />
+        <>
+            <input type="hidden" name={name} value={JSON.stringify(state)} />
+            <PermissionList
+                constraints={state.constraints}
+                onConstraintAdd={(functionType) => dispatch({ type: 'add', constraintType: functionType })}
+                onConditionParameterChange={(conditionIndex, value) => dispatch({ type: 'setParameter', conditionIndex: conditionIndex, value })}
+                nodeTypes={nodeTypes}
+                nodeSearchEndpoint={nodeSearchEndpoint}
+            />
+        </>
     );
 }

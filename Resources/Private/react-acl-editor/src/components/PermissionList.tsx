@@ -8,6 +8,7 @@ interface PermissionListProps {
     onConstraintAdd: (functionName: ConstraintType) => void,
     onConditionParameterChange: (index: number, value: string) => void,
     nodeTypes: NodeType[];
+    nodeSearchEndpoint: string;
 }
 
 
@@ -19,6 +20,7 @@ export default function PermissionList(props: PermissionListProps) {
                     key={i}
                     constraint={constraint}
                     nodeTypes={props.nodeTypes}
+                    nodeSearchEndpoint={props.nodeSearchEndpoint}
                     onParameterChange={value => props.onConditionParameterChange(i, value)}
                 />
             )}

@@ -7,7 +7,9 @@ namespace Sandstorm\NeosAcl\Controller\Module;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Property\TypeConverter\ArrayConverter;
 use Sandstorm\NeosAcl\Domain\Model\DynamicRole;
+use Sandstorm\NeosAcl\Service\DynamicRoleEditorService;
 
 class DynamicRoleController extends ActionController
 {
@@ -17,6 +19,12 @@ class DynamicRoleController extends ActionController
      * @var \Sandstorm\NeosAcl\Domain\Repository\DynamicRoleRepository
      */
     protected $dynamicRoleRepository;
+
+    /**
+     * @Flow\Inject
+     * @var DynamicRoleEditorService
+     */
+    protected $dynamicRoleEditorService;
 
     /**
      * @return void
@@ -40,6 +48,11 @@ class DynamicRoleController extends ActionController
      */
     public function newAction()
     {
+        $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
+    }
+
+    public function initializeCreateAction() {
+        $this->arguments->getArgument('newDynamicRole')->getPropertyMappingConfiguration()->forProperty('matcher')->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_STRING_FORMAT, ArrayConverter::STRING_FORMAT_JSON);
     }
 
     /**
@@ -60,6 +73,7 @@ class DynamicRoleController extends ActionController
     public function editAction(DynamicRole $dynamicRole)
     {
         $this->view->assign('dynamicRole', $dynamicRole);
+        $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
     }
 
     /**

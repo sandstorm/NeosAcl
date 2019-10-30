@@ -20,7 +20,7 @@ class DynamicRole
     protected $name;
 
     /**
-     * @var boolan
+     * @var boolean
      */
     protected $abstract;
 
@@ -96,16 +96,16 @@ class DynamicRole
     /**
      * @return array
      */
-    public function getPrivileges()
+    public function getMatcher()
     {
-        return $this->privileges;
+        return $this->matcher;
     }
 
     /**
-     * @param array $privileges
+     * @param array $matcher
      */
-    public function setPrivileges($privileges)
+    public function setMatcher($matcher)
     {
-        $this->privileges = $privileges;
+        $this->matcher = $matcher;
     }
 }

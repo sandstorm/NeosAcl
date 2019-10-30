@@ -7,11 +7,4 @@
 </h1>
 <f:render section="Content"/>
 
-<f:if condition="{settings.reactDevelopmentMode}">
-    <f:then>
-        <neosAcl:developmentReactResource url="{settings.reactDevelopmentServerIpAndPort}"/>
-    </f:then>
-    <f:else>
-        <script src="../../Public/React/static/js/main.js"></script>
-    </f:else>
-</f:if>
+<script src="../../Public/React/index.js"></script>
