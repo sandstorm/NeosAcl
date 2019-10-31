@@ -7,8 +7,8 @@ function Workspace() {
     return <div>WS</div>
 }
 
-function Node() {
-    return <div>N</div>
+function DimensionPreset() {
+    return <div>DimPreset</div>
 }
 
 function permissionRenderer(props: PermissionComponentProps): React.ReactElement {
@@ -23,12 +23,13 @@ function permissionRenderer(props: PermissionComponentProps): React.ReactElement
             />;
         case "nodeIsOfType":
         case "createdNodeIsOfType":
-        case "isInDimensionPreset":
             return <NodeTypeSelector
                 nodeTypes={props.nodeTypes}
                 value={props.constraint.value}
                 onParameterChange={props.onParameterChange}
             />;
+        case "isInDimensionPreset":
+            return <DimensionPreset />;
         case "isInWorkspace":
             return <Workspace />;
         default:
@@ -42,13 +43,14 @@ interface PermissionComponentProps {
     nodeTypes: NodeType[];
     nodeSearchEndpoint: string;
     onParameterChange: (value: string) => void;
+    onRemove: () => void;
 }
 
 export default function PermissionComponent(props: PermissionComponentProps) {
     const subComponent = permissionRenderer(props);
 
     return (
-        <li>{props.constraint.type}({subComponent})</li>
+        <li>{props.constraint.type}({subComponent}) <a onClick={props.onRemove}>remove</a></li>
     );
 }
 

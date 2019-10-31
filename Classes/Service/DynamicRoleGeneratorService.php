@@ -25,6 +25,7 @@ use Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivile
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\NodePrivilegeSubject;
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\ReadNodePrivilege;
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege;
+use Sandstorm\NeosAcl\Domain\Model\DynamicRole;
 use Sandstorm\NeosAcl\Dto\ACLCheckerDto;
 
 /**
@@ -44,23 +45,57 @@ class DynamicRoleGeneratorService
     {
 
         $connection = $this->entityManager->getConnection();
-        $rows = $connection->executeQuery('SELECT name, abstract, parentrolenames FROM sandstorm_neosacl_domain_model_dynamicrole')->fetchAll();
+        $rows = $connection->executeQuery('SELECT name, abstract, parentrolenames, matcher, privilege FROM sandstorm_neosacl_domain_model_dynamicrole')->fetchAll();
         foreach ($rows as $row) {
+
+            $matcher = self::buildMatcherString(json_decode($row['matcher'], true));
+            $privileges = [];
+
+            if ($row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT || $row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE) {
+                $privileges[] = [
+                    'privilegeTarget' => 'Dynamic:' . $row['name'] . '.EditNode',
+                    'permission' => 'GRANT'
+                ];
+            }
+
+            if ($row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE) {
+                $privileges[] = [
+                    'privilegeTarget' => 'Dynamic:' . $row['name'] . '.CreateNode',
+                    'permission' => 'GRANT'
+                ];
+                $privileges[] = [
+                    'privilegeTarget' => 'Dynamic:' . $row['name'] . '.RemoveNode',
+                    'permission' => 'GRANT'
+                ];
+            }
+
             $configuration['roles']['Dynamic:' . $row['name']] = [
                 'abstract' => intval($row['abstract']) === 1,
                 'parentRoles' => json_decode($row['parentrolenames'], true),
-                'privileges' => [
-                    [
-                        'privilegeTarget' => 'Dynamic:' . $row['name'],
-                        'permission' => 'GRANT'
-                    ]
-                ]
+                'privileges' => $privileges
             ];
 
-            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name']] = [
-                'matcher' => 'isDescendantNodeOf("' . 'a3474e1d-dd60-4a84-82b1-18d2f21891a3' . '")'
+            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name'] . '.EditNode'] = [
+                'matcher' => $matcher
+            ];
+
+            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege']['Dynamic:' . $row['name'] . '.CreateNode'] = [
+                'matcher' => $matcher
+            ];
+
+            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege']['Dynamic:' . $row['name'] . '.RemoveNode'] = [
+                'matcher' => $matcher
             ];
         }
-        //var_dump($configuration);
+    }
+
+    static private function buildMatcherString(array $matcher): string
+    {
+        $matcherStringParts = [];
+        foreach ($matcher['constraints'] as $constraint) {
+            $matcherStringParts[] = sprintf('%s("%s")', $constraint['type'], $constraint['value']);
+        }
+
+        return implode(' && ', $matcherStringParts);
     }
 }

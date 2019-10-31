@@ -18,7 +18,12 @@ type SetParameterAction = {
     value: string
 }
 
-type Action = AddAction | SetParameterAction;
+type RemoveAction = {
+    type: "remove",
+    conditionIndex: number
+}
+
+type Action = AddAction | SetParameterAction | RemoveAction;
 
 const initialState: State = { constraints: [] };
 
@@ -35,6 +40,10 @@ function reducer(state: State, action: Action): State {
             return produce(state, draftState => {
                 draftState.constraints[action.conditionIndex].value = action.value
             });
+        case 'remove':
+            return produce(state, draftState => {
+                draftState.constraints.splice(action.conditionIndex, 1);
+            });
         default:
             return state;
     }
@@ -50,6 +59,7 @@ export default function PermissionWidget({name, value, nodeTypes, nodeSearchEndp
                 constraints={state.constraints}
                 onConstraintAdd={(functionType) => dispatch({ type: 'add', constraintType: functionType })}
                 onConditionParameterChange={(conditionIndex, value) => dispatch({ type: 'setParameter', conditionIndex: conditionIndex, value })}
+                onRemove={(conditionIndex) => dispatch({ type: 'remove', conditionIndex: conditionIndex })}
                 nodeTypes={nodeTypes}
                 nodeSearchEndpoint={nodeSearchEndpoint}
             />

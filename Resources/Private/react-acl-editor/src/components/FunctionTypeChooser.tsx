@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Select from 'react-select'
 import { ConstraintType } from '../types';
+import {selectStyles} from "./helpers";
 
 interface Option {
     value: ConstraintType;
@@ -13,9 +14,9 @@ const options: Option[] = [
     { value: 'isAncestorOrDescendantNodeOf', label: 'isAncestorOrDescendantNodeOf' },
     { value: 'nodeIsOfType', label: 'nodeIsOfType' },
     { value: 'createdNodeIsOfType', label: 'createdNodeIsOfType' },
-    { value: 'isInWorkspace', label: 'isInWorkspace' },
+    //{ value: 'isInWorkspace', label: 'isInWorkspace' },
     //{ value: 'nodePropertyIsIn', label: 'nodePropertyIsIn' },
-    { value: 'isInDimensionPreset', label: 'isInDimensionPreset' }
+    //{ value: 'isInDimensionPreset', label: 'isInDimensionPreset' }
 ];
 
 interface FunctionTypeChooserProps {
@@ -24,7 +25,7 @@ interface FunctionTypeChooserProps {
 
 export default function FunctionTypeChooser(props: FunctionTypeChooserProps) {
     return (
-        <div><Select options={options} onChange={(value) => {
+        <div style={{width: 400}}><Select styles={selectStyles} options={options} onChange={(value) => {
             if (Array.isArray(value)) {
                 throw new Error("Unexpected type passed to ReactSelect onChange handler");
             }

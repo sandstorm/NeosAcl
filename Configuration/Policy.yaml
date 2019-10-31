@@ -13,8 +13,16 @@ privilegeTargets:
     # this privilegeTarget is defined to switch to a "whitelist" approach
     'Sandstorm.NeosAcl:EditAllNodes':
       matcher: 'TRUE'
-#    'Dynamic:Foo':
-#      matcher: 'isDescendantNodeOf("a3474e1d-dd60-4a84-82b1-18d2f21891a3")'
+
+  'Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege':
+    # this privilegeTarget is defined to switch to a "whitelist" approach
+    'Sandstorm.NeosAcl:CreateAllNodes':
+      matcher: 'TRUE'
+
+  'Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege':
+    # this privilegeTarget is defined to switch to a "whitelist" approach
+    'Sandstorm.NeosAcl:RemoveAllNodes':
+      matcher: 'TRUE'
 
 roles:
   'Neos.Neos:Administrator':
@@ -25,14 +33,25 @@ roles:
       -
         privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.DynamicRoles'
         permission: GRANT
+      # Admins and unrestricted editors can still do everything.
       -
         privilegeTarget: 'Sandstorm.NeosAcl:EditAllNodes'
         permission: GRANT
-  'Neos.Neos:Editor':
-      privileges:
-      - privilegeTarget: 'Sandstorm.NeosAcl:EditAllNodes'
+      -
+        privilegeTarget: 'Sandstorm.NeosAcl:CreateAllNodes'
         permission: GRANT
-#  'Dynamic:Foo2':
-#    privileges:
-#      - privilegeTarget: 'Dynamic:Foo'
-#        permission: GRANT
+      -
+        privilegeTarget: 'Sandstorm.NeosAcl:RemoveAllNodes'
+        permission: GRANT
+  'Neos.Neos:Editor':
+      # Admins and unrestricted editors can still do everything.
+      privileges:
+        -
+          privilegeTarget: 'Sandstorm.NeosAcl:EditAllNodes'
+          permission: GRANT
+        -
+          privilegeTarget: 'Sandstorm.NeosAcl:CreateAllNodes'
+          permission: GRANT
+        -
+          privilegeTarget: 'Sandstorm.NeosAcl:RemoveAllNodes'
+          permission: GRANT

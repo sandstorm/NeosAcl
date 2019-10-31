@@ -21,8 +21,15 @@
             </li>
 
             <li>
+                <label for="matcher">Matcher</label>
+                <f:form.textfield property="matcher" id="matcher" class="dynamic-editor" data="{props: dynamicEditorProps}" value="{dynamicRole.matcher -> f:format.json()}" />
+            </li>
+
+            <li>
                 <label for="privileges">Privileges</label>
-                <f:form.textfield property="matcher" id="privileges" class="dynamic-editor" data="{props: dynamicEditorProps}" value="{dynamicRole.matcher -> f:format.json()}" />
+                <f:form.radio id="privileges" property="privilege" value="view" /> View<br />
+                <f:form.radio property="privilege" value="view_edit" /> View, Edit<br />
+                <f:form.radio property="privilege" value="view_edit_create_delete" /> View, Edit, Create, Delete<br />
             </li>
 
             <li>

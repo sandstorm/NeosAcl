@@ -7,6 +7,7 @@ interface PermissionListProps {
     constraints: Constraint[];
     onConstraintAdd: (functionName: ConstraintType) => void,
     onConditionParameterChange: (index: number, value: string) => void,
+    onRemove: (index: number) => void,
     nodeTypes: NodeType[];
     nodeSearchEndpoint: string;
 }
@@ -22,9 +23,14 @@ export default function PermissionList(props: PermissionListProps) {
                     nodeTypes={props.nodeTypes}
                     nodeSearchEndpoint={props.nodeSearchEndpoint}
                     onParameterChange={value => props.onConditionParameterChange(i, value)}
+                    onRemove={() => props.onRemove(i)}
                 />
             )}
-            <FunctionTypeChooser onChoose={props.onConstraintAdd} />
+
+            <li>
+                <hr />
+                <FunctionTypeChooser onChoose={props.onConstraintAdd} />
+            </li>
         </ul>
     );
 }

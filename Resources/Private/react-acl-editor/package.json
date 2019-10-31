@@ -7,7 +7,7 @@
     "@types/node": "11.9.6",
     "@types/react": "16.8.6",
     "@types/react-dom": "16.8.2",
-    "@types/react-select": "^2.0.13",
+    "@types/react-select": "^3.0.6",
     "@types/storybook__addon-actions": "^3.4.2",
     "immer": "^2.1.0",
     "lodash": "^4.17.11",

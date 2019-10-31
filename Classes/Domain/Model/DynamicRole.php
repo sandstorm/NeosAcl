@@ -37,8 +37,8 @@ class DynamicRole
     protected $matcher = [];
 
     const PRIVILEGE_VIEW = 'view';
-    const PRIVILEGE_VIEW_EDIT = 'edit';
-    const PRIVILEGE_VIEW_EDIT_CREATE_DELETE = 'edit_create_delete';
+    const PRIVILEGE_VIEW_EDIT = 'view_edit';
+    const PRIVILEGE_VIEW_EDIT_CREATE_DELETE = 'view_edit_create_delete';
 
     /**
      * @var string
@@ -108,4 +108,22 @@ class DynamicRole
     {
         $this->matcher = $matcher;
     }
+
+    /**
+     * @return string
+     */
+    public function getPrivilege()
+    {
+        return $this->privilege;
+    }
+
+    /**
+     * @param string $privilege
+     */
+    public function setPrivilege($privilege)
+    {
+        $this->privilege = $privilege;
+    }
+
+
 }

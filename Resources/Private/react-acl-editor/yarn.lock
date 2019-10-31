@@ -2007,10 +2007,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-select@^2.0.13":
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-2.0.13.tgz#b6aa7a18272b212afa0c90a5cbecf462eda26621"
-  integrity sha512-DHHMuKNPCXUfcrroAc/BRwgqujipaYLxiYWTNr/wa1kLJ15ublhqaFCsH6z9SRXNdbiNEaU+42lJF7TeLFsj1g==
+"@types/react-select@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.6.tgz#63e06aea611bcb264f4b8af069f11f987cbecb5e"
+  integrity sha512-vgEbVtwxtdgmaOPXb8HRlO3VgEwlhx8MVW/nB5yI/q3442x31XETy9P1UAoVRhSoYIEa4TuJGJCkKk7Ss3y5Eg==
   dependencies:
     "@types/react" "*"
     "@types/react-dom" "*"

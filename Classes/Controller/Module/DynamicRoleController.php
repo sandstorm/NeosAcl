@@ -53,6 +53,7 @@ class DynamicRoleController extends ActionController
 
     public function initializeCreateAction() {
         $this->arguments->getArgument('newDynamicRole')->getPropertyMappingConfiguration()->forProperty('matcher')->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_STRING_FORMAT, ArrayConverter::STRING_FORMAT_JSON);
+        $this->arguments->getArgument('newDynamicRole')->getPropertyMappingConfiguration()->forProperty('parentRoleNames')->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_STRING_FORMAT, ArrayConverter::STRING_FORMAT_JSON);
     }
 
     /**
@@ -74,6 +75,11 @@ class DynamicRoleController extends ActionController
     {
         $this->view->assign('dynamicRole', $dynamicRole);
         $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
+    }
+
+    public function initializeUpdateAction() {
+        $this->arguments->getArgument('dynamicRole')->getPropertyMappingConfiguration()->forProperty('matcher')->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_STRING_FORMAT, ArrayConverter::STRING_FORMAT_JSON);
+        $this->arguments->getArgument('dynamicRole')->getPropertyMappingConfiguration()->forProperty('parentRoleNames')->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_STRING_FORMAT, ArrayConverter::STRING_FORMAT_JSON);
     }
 
     /**
