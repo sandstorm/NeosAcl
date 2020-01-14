@@ -43,6 +43,20 @@ class DynamicRoleGeneratorService
 
     public function modifyConfiguration(&$configuration)
     {
+        $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Foo:Bar'] = [
+            'matcher' => 'true'
+        ];
+        $configuration['roles']['Dynamic:Foo'] = [
+            'abstract' => false,
+            'parentRoles' => ['Neos.Neos:AbstractEditor'],
+            'privileges' => [
+                [
+                    'privilegeTarget' => 'Foo:Bar',
+                    'permission' => 'GRANT'
+                ]
+            ]
+        ];
+        return;
 
         $connection = $this->entityManager->getConnection();
         $rows = $connection->executeQuery('SELECT name, abstract, parentrolenames, matcher, privilege FROM sandstorm_neosacl_domain_model_dynamicrole')->fetchAll();
