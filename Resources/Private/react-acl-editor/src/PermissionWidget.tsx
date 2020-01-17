@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import PermissionList from './components/PermissionList';
 import produce from "immer";
 import { Constraint, ConstraintType } from './types';
@@ -49,31 +49,48 @@ function reducer(state: State, action: Action): State {
     }
 }
 
-import {DragDropContext} from 'react-dnd';
+import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 const withDragDropContext = DragDropContext(HTML5Backend);
 
+const csrfToken = 'f43213de508b5751ca1e45d2d8a12b1d';
+const siteNode = '/sites/neosdemo@user-admin;language=en_US';
+import SlimNodeTree from './components/SlimNodeTree';
 
-function PermissionWidget({name, value, nodeTypes, nodeSearchEndpoint}) {
+function PermissionWidget({ name, value, nodeTypes, nodeSearchEndpoint }) {
     const initialValue = (value ? JSON.parse(value) : initialState);
-    const [state, dispatch] = useReducer(reducer, initialValue);
+
+    const [nodes, setNodes] = useState([]);
+    useEffect(
+        () => {
+
+            fetch('/neos/ui-services/flow-query', {
+                credentials: "same-origin",
+                method: 'POST',
+                headers: {
+                    // TODO
+                    'X-Flow-Csrftoken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "chain": [{ "type": "createContext", "payload": [{ "$node": siteNode }, { "$node": siteNode }] }, { "type": "neosUiDefaultNodes", "payload": ["Neos.Neos:Document", 4, [], null] }, { "type": "getForTree", "payload": "ALL" }] })
+            })
+                .then(response => response.json())
+                .then(responseJson => {
+                    setNodes(responseJson);
+                });
+        },
+        [csrfToken, siteNode]
+    );
+    const state = {};
+
+
+    console.log("NODES", nodes);
+
     return (
         <>
             <input type="hidden" name={name} value={JSON.stringify(state)} />
-            <Tree>
-                <Tree.Node>
-                    <Tree.Node.Header level={1} label="Label" title="Foo" isCollapsed={false} icon="file-o" hasChildren={true} />
-                    <Tree.Node.Contents>
-                        <Tree.Node>
-                            <Tree.Node.Header level={2} label="Label" title="Foo" isCollapsed={true} icon="file-o" hasChildren={true} />
-                        </Tree.Node>
-                        <Tree.Node>
-                            <Tree.Node.Header level={2} label="Label" title="Foo" isCollapsed={true} icon="file-o" hasChildren={true} />
-                        </Tree.Node>
-                    </Tree.Node.Contents>
-                </Tree.Node>
-            </Tree>
+            <SlimNodeTree nodes={nodes} rootNodeContextPath={siteNode} />
         </>
     );
 }
