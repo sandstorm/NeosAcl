@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import PermissionList from './components/PermissionList';
 import produce from "immer";
 import { Constraint, ConstraintType } from './types';
-
+import Tree from '@neos-project/react-ui-components/lib-esm/Tree/index'
 interface State {
     constraints: Constraint[]
 }
@@ -49,20 +49,33 @@ function reducer(state: State, action: Action): State {
     }
 }
 
-export default function PermissionWidget({name, value, nodeTypes, nodeSearchEndpoint}) {
+import {DragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+
+const withDragDropContext = DragDropContext(HTML5Backend);
+
+
+function PermissionWidget({name, value, nodeTypes, nodeSearchEndpoint}) {
     const initialValue = (value ? JSON.parse(value) : initialState);
     const [state, dispatch] = useReducer(reducer, initialValue);
     return (
         <>
             <input type="hidden" name={name} value={JSON.stringify(state)} />
-            <PermissionList
-                constraints={state.constraints}
-                onConstraintAdd={(functionType) => dispatch({ type: 'add', constraintType: functionType })}
-                onConditionParameterChange={(conditionIndex, value) => dispatch({ type: 'setParameter', conditionIndex: conditionIndex, value })}
-                onRemove={(conditionIndex) => dispatch({ type: 'remove', conditionIndex: conditionIndex })}
-                nodeTypes={nodeTypes}
-                nodeSearchEndpoint={nodeSearchEndpoint}
-            />
+            <Tree>
+                <Tree.Node>
+                    <Tree.Node.Header level={1} label="Label" title="Foo" isCollapsed={false} icon="file-o" hasChildren={true} />
+                    <Tree.Node.Contents>
+                        <Tree.Node>
+                            <Tree.Node.Header level={2} label="Label" title="Foo" isCollapsed={true} icon="file-o" hasChildren={true} />
+                        </Tree.Node>
+                        <Tree.Node>
+                            <Tree.Node.Header level={2} label="Label" title="Foo" isCollapsed={true} icon="file-o" hasChildren={true} />
+                        </Tree.Node>
+                    </Tree.Node.Contents>
+                </Tree.Node>
+            </Tree>
         </>
     );
 }
+
+export default withDragDropContext(PermissionWidget);

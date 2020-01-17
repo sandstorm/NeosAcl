@@ -29,6 +29,6 @@ class Package extends BasePackage
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
 
-        $dispatcher->connect(PolicyService::class, 'configurationLoaded', DynamicRoleGeneratorService::class, 'modifyConfiguration');
+        $dispatcher->connect(PolicyService::class, 'configurationLoaded', DynamicRoleGeneratorService::class, 'onConfigurationLoaded');
     }
 }

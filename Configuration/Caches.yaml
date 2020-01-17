@@ -1,2 +1,2 @@
 Flow_Security_Authorization_Privilege_Method:
-  frontend: 'Sandstorm\NeosAcl\Cache\SecurityAuthorizationPrivilegeMethodCacheFrontend'
+  frontend: 'Sandstorm\NeosAcl\DynamicRoleEnforcement\SecurityAuthorizationPrivilegeMethodCacheFrontend'

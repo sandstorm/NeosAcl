@@ -1,6 +1,3 @@
-#                                                                        #
-# Security policy for the Neos package                                   #
-#                                                                        #
 
 privilegeTargets:
   'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
@@ -9,6 +6,8 @@ privilegeTargets:
     'Sandstorm.NeosAcl:Backend.Module.DynamicRoles':
       matcher: 'method(Sandstorm\NeosAcl\Controller\Module\DynamicRoleController->(index|show|create|new|update|remove|edit)Action())'
 
+  # NOTE: if adding new "catch-all" PrivilegeTargets, they need to be added to
+  # DynamicPolicyRegistry::ALLOWED_PRIVILEGE_TARGET_TYPES
   'Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege':
     # this privilegeTarget is defined to switch to a "whitelist" approach
     'Sandstorm.NeosAcl:EditAllNodes':

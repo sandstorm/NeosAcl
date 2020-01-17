@@ -27,6 +27,7 @@ use Neos\ContentRepository\Security\Authorization\Privilege\Node\ReadNodePrivile
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege;
 use Sandstorm\NeosAcl\Domain\Model\DynamicRole;
 use Sandstorm\NeosAcl\Dto\ACLCheckerDto;
+use Sandstorm\NeosAcl\DynamicRoleEnforcement\DynamicPolicyRegistry;
 
 /**
  * @Flow\Scope("singleton")
@@ -40,22 +41,34 @@ class DynamicRoleGeneratorService
      */
     protected $entityManager;
 
+    /**
+     * @Flow\Inject(lazy=false)
+     * @var DynamicPolicyRegistry
+     */
+    protected $dynamicPolicyRegistry;
 
-    public function modifyConfiguration(&$configuration)
+    public function onConfigurationLoaded(&$configuration)
     {
-        $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Foo:Bar'] = [
+        // NOTE: this hook seems to be only triggered in runtime; not in compiletime (which is great for us!)
+
+        $customConfiguration = [];
+        $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Foo:Bar'] = [
             'matcher' => 'true'
         ];
-        $configuration['roles']['Dynamic:Foo'] = [
+        $customConfiguration['roles']['Dynamic:Foo'] = [
             'abstract' => false,
             'parentRoles' => ['Neos.Neos:AbstractEditor'],
-            'privileges' => [
+            /*'privileges' => [
                 [
                     'privilegeTarget' => 'Foo:Bar',
                     'permission' => 'GRANT'
                 ]
-            ]
+            ]*/
         ];
+
+        $this->dynamicPolicyRegistry->registerDynamicPolicyAndMergeThemWithOriginal($customConfiguration, $configuration);
+
+
         return;
 
         $connection = $this->entityManager->getConnection();
@@ -83,21 +96,21 @@ class DynamicRoleGeneratorService
                 ];
             }
 
-            $configuration['roles']['Dynamic:' . $row['name']] = [
+            $customConfiguration['roles']['Dynamic:' . $row['name']] = [
                 'abstract' => intval($row['abstract']) === 1,
                 'parentRoles' => json_decode($row['parentrolenames'], true),
                 'privileges' => $privileges
             ];
 
-            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name'] . '.EditNode'] = [
+            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name'] . '.EditNode'] = [
                 'matcher' => $matcher
             ];
 
-            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege']['Dynamic:' . $row['name'] . '.CreateNode'] = [
+            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege']['Dynamic:' . $row['name'] . '.CreateNode'] = [
                 'matcher' => $matcher
             ];
 
-            $configuration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege']['Dynamic:' . $row['name'] . '.RemoveNode'] = [
+            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege']['Dynamic:' . $row['name'] . '.RemoveNode'] = [
                 'matcher' => $matcher
             ];
         }
