@@ -1,8 +1,9 @@
 import React, { useReducer, useEffect, useState } from 'react';
-import PermissionList from './components/PermissionList';
+import WorkspaceSelector, { Workspace } from './components/WorkspaceSelector';
 import produce from "immer";
 import { Constraint, ConstraintType } from './types';
-import Tree from '@neos-project/react-ui-components/lib-esm/Tree/index'
+import SelectBox from '@neos-project/react-ui-components/lib-esm/SelectBox/index';
+
 interface State {
     constraints: Constraint[]
 }
@@ -54,12 +55,17 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 const withDragDropContext = DragDropContext(HTML5Backend);
 
-const csrfToken = 'f43213de508b5751ca1e45d2d8a12b1d';
 const siteNode = '/sites/neosdemo@user-admin;language=en_US';
 import SlimNodeTree from './components/SlimNodeTree';
 
-function PermissionWidget({ name, value, nodeTypes, nodeSearchEndpoint }) {
-    const initialValue = (value ? JSON.parse(value) : initialState);
+type PermissionWidgetProps = {
+    csrfProtectionToken: string,
+    workspaces: Workspace[]
+
+};
+
+function PermissionWidget(props: PermissionWidgetProps) {
+    const initialValue = initialState;
 
     const [nodes, setNodes] = useState([]);
     useEffect(
@@ -70,7 +76,7 @@ function PermissionWidget({ name, value, nodeTypes, nodeSearchEndpoint }) {
                 method: 'POST',
                 headers: {
                     // TODO
-                    'X-Flow-Csrftoken': csrfToken,
+                    'X-Flow-Csrftoken': props.csrfProtectionToken,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ "chain": [{ "type": "createContext", "payload": [{ "$node": siteNode }, { "$node": siteNode }] }, { "type": "neosUiDefaultNodes", "payload": ["Neos.Neos:Document", 4, [], null] }, { "type": "getForTree", "payload": "ALL" }] })
@@ -80,16 +86,41 @@ function PermissionWidget({ name, value, nodeTypes, nodeSearchEndpoint }) {
                     setNodes(responseJson);
                 });
         },
-        [csrfToken, siteNode]
+        [props.csrfProtectionToken, siteNode]
     );
     const state = {};
 
 
-    console.log("NODES", nodes);
+    const opts = [
+        {
+            label: 'Foo',
+            value: 'bla'
+        },
+        {
+            label: 'Foo2',
+            value: 'bla2'
+        },
+        {
+            label: 'Foo3',
+            value: 'bla3'
+        }
+    ];
 
     return (
         <>
             <input type="hidden" name={name} value={JSON.stringify(state)} />
+            <WorkspaceSelector workspaces={props.workspaces} />
+            <SelectBox options={[
+                {
+                    label: 'Foo',
+                    value: 'bla'
+                },
+                {
+                    label: 'Foo2',
+                    value: 'bla2'
+                }
+            ]} optionValueField="value" placeholder="Test" />
+            B
             <SlimNodeTree nodes={nodes} rootNodeContextPath={siteNode} />
         </>
     );

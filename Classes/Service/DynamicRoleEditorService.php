@@ -7,12 +7,16 @@ namespace Sandstorm\NeosAcl\Service;
  */
 
 use Doctrine\DBAL\Connection;
+use Neos\ContentRepository\Domain\Model\Workspace;
+use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
 use Neos\ContentRepository\Domain\Service\NodeTypeManager;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\Mvc\Routing\UriBuilder;
+use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Security\Authorization\Privilege\PrivilegeInterface;
 use Neos\Flow\Security\Authorization\PrivilegeManagerInterface;
+use Neos\Flow\Security\Context;
 use Neos\Flow\Security\Exception\NoSuchRoleException;
 use Neos\Flow\Security\Policy\PolicyService;
 use Neos\Flow\Security\Policy\Role;
@@ -42,12 +46,35 @@ class DynamicRoleEditorService
      */
     protected $nodeTypeManager;
 
+    /**
+     * @Flow\Inject
+     * @var Context
+     */
+    protected $securityContext;
+
+    /**
+     * @Flow\Inject
+     * @var ResourceManager
+     */
+    protected $resourceManager;
+
+
+    /**
+     * @Flow\Inject
+     * @var WorkspaceRepository
+     */
+    protected $workspaceRepository;
 
     public function generatePropsForReactWidget(ActionRequest $actionRequest): string
     {
         $props = [
             'nodeTypes' => $this->generateNodeTypeNames(),
-            'nodeSearchEndpoint' => $this->generateNodeSearchEndpoint($actionRequest)
+            'nodeSearchEndpoint' => $this->generateNodeSearchEndpoint($actionRequest),
+
+
+            'csrfProtectionToken' => $this->securityContext->getCsrfProtectionToken(),
+            'cssFilePath' => $this->resourceManager->getPublicPackageResourceUriByPath('resource://Sandstorm.NeosAcl/Public/React/index.css'),
+            'workspaces' => $this->getWorkspaces()
         ];
 
         return json_encode($props);
@@ -71,5 +98,22 @@ class DynamicRoleEditorService
         $uriBuilder = new UriBuilder();
         $uriBuilder->setRequest($actionRequest->getMainRequest());
         return $uriBuilder->setCreateAbsoluteUri(true)->uriFor('index', [], 'Service\Nodes', 'Neos.Neos');
+    }
+
+    protected function getWorkspaces()
+    {
+        $result = [];
+        foreach ($this->workspaceRepository->findAll() as $workspace) {
+            /* @var $workspace \Neos\ContentRepository\Domain\Model\Workspace */
+
+            if (!$workspace->isPersonalWorkspace()) {
+                $result[] = [
+                    'name' => $workspace->getName(),
+                    'label' => $workspace->getTitle()
+                ];
+            }
+        }
+
+        return $result;
     }
 }

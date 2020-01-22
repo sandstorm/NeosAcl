@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState, useMemo } from 'react';
 import Tree from '@neos-project/react-ui-components/lib-esm/Tree/index';
+import CheckBox from '@neos-project/react-ui-components/lib-esm/Checkbox/index';
 
 type NodeChildrenReference = {
     readonly contextPath: string;
@@ -41,15 +42,36 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
             .filter(isNode);
     }, [props.nodes, props.node]);
 
+    const [isChecked, setChecked] = useState(false);
+
+    const [isCollapsed, setCollapsed] = useState(false);
+
+    const label = (
+        <>
+            <CheckBox isChecked={isChecked} /> {props.node.label}
+        </>
+    );
+
     return (
         <Tree.Node>
-            <Tree.Node.Header level={props.level} label={props.node.label} title={props.node.nodeType} isCollapsed={false} icon="file-o" hasChildren={childNodes.length > 0} />
-            {childNodes.length === 0 ?
+            <Tree.Node.Header
+                isActive={isChecked}
+
+                level={props.level}
+                label={label}
+                title={props.node.nodeType}
+                isCollapsed={isCollapsed}
+                icon="file-o"
+                hasChildren={childNodes.length > 0}
+                onToggle={() => setCollapsed(!isCollapsed)}
+                onClick={() => setChecked(!isChecked)}
+            />
+            {isCollapsed || childNodes.length === 0 ?
                 null
                 :
-                    <Tree.Node.Contents>
-                        {childNodes.map(childNode => <SlimNode nodes={props.nodes} node={childNode} level={props.level + 1} />)}
-                    </Tree.Node.Contents>
+                <Tree.Node.Contents>
+                    {childNodes.map(childNode => <SlimNode nodes={props.nodes} node={childNode} level={props.level + 1} />)}
+                </Tree.Node.Contents>
             }
 
         </Tree.Node>
@@ -67,9 +89,12 @@ export default React.memo(function SlimNodeTree(props: SlimNodeTreeProps) {
     }
 
     return (
+        <>
         <Tree>
+
             <SlimNode nodes={props.nodes} node={rootNode} level={1} />
         </Tree>
+        </>
     );
 });
 
