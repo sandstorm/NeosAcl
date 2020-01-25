@@ -1,6 +1,5 @@
-import React, { Component, useEffect, useState, useMemo } from 'react';
+import React from 'react';
 import MultiSelectBox from '@neos-project/react-ui-components/lib-esm/MultiSelectBox/index';
-import { produceWithPatches } from 'immer';
 
 export type Workspace = {
     readonly name: string;

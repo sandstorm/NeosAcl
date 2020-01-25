@@ -1,8 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import WorkspaceSelector, { Workspace } from './components/WorkspaceSelector';
 import produce from "immer";
-import { Constraint, ConstraintType } from './types';
-import SelectBox from '@neos-project/react-ui-components/lib-esm/SelectBox/index';
 
 interface State {
     readonly selectedWorkspaces: string[];
@@ -50,12 +48,13 @@ const withDragDropContext = DragDropContext(HTML5Backend);
 const siteNode = '/sites/neosdemo@user-admin;language=en_US';
 import SlimNodeTree from './components/SlimNodeTree';
 import DimensionPresetSelector, {DimensionPreset} from './components/DimensionPresetSelector';
+import { NodeType } from './types';
 
 type PermissionWidgetProps = {
     csrfProtectionToken: string,
     workspaces: Workspace[],
-    dimensions: DimensionPreset[]
-
+    dimensions: DimensionPreset[],
+    nodeTypes: NodeType[]
 };
 
 function PermissionWidget(props: PermissionWidgetProps) {
@@ -86,21 +85,6 @@ function PermissionWidget(props: PermissionWidgetProps) {
     );
 
 
-    const opts = [
-        {
-            label: 'Foo',
-            value: 'bla'
-        },
-        {
-            label: 'Foo2',
-            value: 'bla2'
-        },
-        {
-            label: 'Foo3',
-            value: 'bla3'
-        }
-    ];
-
     return (
         <>
             <input type="hidden" name={name} value={JSON.stringify(state)} />
@@ -119,7 +103,7 @@ function PermissionWidget(props: PermissionWidgetProps) {
                     dispatch({type: 'setDimensionPresets', dimensionPresets}
                 )}
             />
-            <SlimNodeTree nodes={nodes} rootNodeContextPath={siteNode} />
+            <SlimNodeTree nodes={nodes} rootNodeContextPath={siteNode} nodeTypes={props.nodeTypes} />
         </>
     );
 }

@@ -86436,7 +86436,88 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = (0, _reactCssThemr.themr)(_identifiers.default.checkBox, _style.default)(_checkBox.default);
 
 exports.default = _default;
-},{"@friendsofreactjs/react-css-themr":"../node_modules/@friendsofreactjs/react-css-themr/lib/index.js","../identifiers":"../node_modules/@neos-project/react-ui-components/lib-esm/identifiers.js","./checkBox":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/checkBox.js","./style.css":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/style.css"}],"components/NodeTypeFilter.tsx":[function(require,module,exports) {
+},{"@friendsofreactjs/react-css-themr":"../node_modules/@friendsofreactjs/react-css-themr/lib/index.js","../identifiers":"../node_modules/@neos-project/react-ui-components/lib-esm/identifiers.js","./checkBox":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/checkBox.js","./style.css":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/style.css"}],"../node_modules/react-close-on-escape/dist/index.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CloseOnEscape = function (_Component) {
+  _inherits(CloseOnEscape, _Component);
+
+  function CloseOnEscape() {
+    _classCallCheck(this, CloseOnEscape);
+
+    var _this = _possibleConstructorReturn(this, (CloseOnEscape.__proto__ || Object.getPrototypeOf(CloseOnEscape)).call(this));
+
+    _this.onEscape = _this.onEscape.bind(_this);
+    return _this;
+  }
+
+  _createClass(CloseOnEscape, [{
+    key: 'onEscape',
+    value: function onEscape(_ref) {
+      var keyCode = _ref.keyCode;
+
+      if (keyCode === 27) {
+        this.props.onEscape();
+      }
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.addEventListener('keydown', this.onEscape);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      document.removeEventListener('keydown', this.onEscape);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return this.props.children;
+    }
+  }]);
+
+  return CloseOnEscape;
+}(_react.Component);
+
+exports.default = CloseOnEscape;
+
+
+CloseOnEscape.propTypes = {
+  onEscape: _propTypes2.default.func.isRequired
+};
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js"}],"../node_modules/react-portal/es/utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.canUseDOM = void 0;
+var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+exports.canUseDOM = canUseDOM;
+},{}],"../node_modules/react-portal/es/Portal.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -86446,16 +86527,731 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/MultiSelectBox/index"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _reactDom = _interopRequireDefault(require("react-dom"));
+
+var _utils = require("./utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var Portal = function (_React$Component) {
+  _inherits(Portal, _React$Component);
+
+  function Portal() {
+    _classCallCheck(this, Portal);
+
+    return _possibleConstructorReturn(this, (Portal.__proto__ || Object.getPrototypeOf(Portal)).apply(this, arguments));
+  }
+
+  _createClass(Portal, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      if (this.defaultNode) {
+        document.body.removeChild(this.defaultNode);
+      }
+
+      this.defaultNode = null;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!_utils.canUseDOM) {
+        return null;
+      }
+
+      if (!this.props.node && !this.defaultNode) {
+        this.defaultNode = document.createElement('div');
+        document.body.appendChild(this.defaultNode);
+      }
+
+      return _reactDom.default.createPortal(this.props.children, this.props.node || this.defaultNode);
+    }
+  }]);
+
+  return Portal;
+}(_react.default.Component);
+
+Portal.propTypes = {
+  children: _propTypes.default.node.isRequired,
+  node: _propTypes.default.any
+};
+var _default = Portal;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-dom":"../node_modules/react-dom/index.js","./utils":"../node_modules/react-portal/es/utils.js"}],"../node_modules/react-portal/es/LegacyPortal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactDom = _interopRequireDefault(require("react-dom"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+} // This file is a fallback for a consumer who is not yet on React 16
+// as createPortal was introduced in React 16
+
+
+var Portal = function (_React$Component) {
+  _inherits(Portal, _React$Component);
+
+  function Portal() {
+    _classCallCheck(this, Portal);
+
+    return _possibleConstructorReturn(this, (Portal.__proto__ || Object.getPrototypeOf(Portal)).apply(this, arguments));
+  }
+
+  _createClass(Portal, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.renderPortal();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(props) {
+      this.renderPortal();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _reactDom.default.unmountComponentAtNode(this.defaultNode || this.props.node);
+
+      if (this.defaultNode) {
+        document.body.removeChild(this.defaultNode);
+      }
+
+      this.defaultNode = null;
+      this.portal = null;
+    }
+  }, {
+    key: 'renderPortal',
+    value: function renderPortal(props) {
+      if (!this.props.node && !this.defaultNode) {
+        this.defaultNode = document.createElement('div');
+        document.body.appendChild(this.defaultNode);
+      }
+
+      var children = this.props.children; // https://gist.github.com/jimfb/d99e0678e9da715ccf6454961ef04d1b
+
+      if (typeof this.props.children.type === 'function') {
+        children = _react.default.cloneElement(this.props.children);
+      }
+
+      this.portal = _reactDom.default.unstable_renderSubtreeIntoContainer(this, children, this.props.node || this.defaultNode);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return null;
+    }
+  }]);
+
+  return Portal;
+}(_react.default.Component);
+
+var _default = Portal;
+exports.default = _default;
+Portal.propTypes = {
+  children: _propTypes.default.node.isRequired,
+  node: _propTypes.default.any
+};
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","prop-types":"../node_modules/prop-types/index.js"}],"../node_modules/react-portal/es/PortalCompat.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _reactDom = _interopRequireDefault(require("react-dom"));
+
+var _Portal = _interopRequireDefault(require("./Portal"));
+
+var _LegacyPortal = _interopRequireDefault(require("./LegacyPortal"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Portal = void 0;
+
+if (_reactDom.default.createPortal) {
+  Portal = _Portal.default;
+} else {
+  Portal = _LegacyPortal.default;
+}
+
+var _default = Portal;
+exports.default = _default;
+},{"react-dom":"../node_modules/react-dom/index.js","./Portal":"../node_modules/react-portal/es/Portal.js","./LegacyPortal":"../node_modules/react-portal/es/LegacyPortal.js"}],"../node_modules/react-portal/es/PortalWithState.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _PortalCompat = _interopRequireDefault(require("./PortalCompat"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var KEYCODES = {
+  ESCAPE: 27
+};
+
+var PortalWithState = function (_React$Component) {
+  _inherits(PortalWithState, _React$Component);
+
+  function PortalWithState(props) {
+    _classCallCheck(this, PortalWithState);
+
+    var _this = _possibleConstructorReturn(this, (PortalWithState.__proto__ || Object.getPrototypeOf(PortalWithState)).call(this, props));
+
+    _this.portalNode = null;
+    _this.state = {
+      active: !!props.defaultOpen
+    };
+    _this.openPortal = _this.openPortal.bind(_this);
+    _this.closePortal = _this.closePortal.bind(_this);
+    _this.wrapWithPortal = _this.wrapWithPortal.bind(_this);
+    _this.handleOutsideMouseClick = _this.handleOutsideMouseClick.bind(_this);
+    _this.handleKeydown = _this.handleKeydown.bind(_this);
+    return _this;
+  }
+
+  _createClass(PortalWithState, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.closeOnEsc) {
+        document.addEventListener('keydown', this.handleKeydown);
+      }
+
+      if (this.props.closeOnOutsideClick) {
+        document.addEventListener('click', this.handleOutsideMouseClick);
+      }
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      if (this.props.closeOnEsc) {
+        document.removeEventListener('keydown', this.handleKeydown);
+      }
+
+      if (this.props.closeOnOutsideClick) {
+        document.removeEventListener('click', this.handleOutsideMouseClick);
+      }
+    }
+  }, {
+    key: 'openPortal',
+    value: function openPortal(e) {
+      if (this.state.active) {
+        return;
+      }
+
+      if (e && e.nativeEvent) {
+        e.nativeEvent.stopImmediatePropagation();
+      }
+
+      this.setState({
+        active: true
+      }, this.props.onOpen);
+    }
+  }, {
+    key: 'closePortal',
+    value: function closePortal() {
+      if (!this.state.active) {
+        return;
+      }
+
+      this.setState({
+        active: false
+      }, this.props.onClose);
+    }
+  }, {
+    key: 'wrapWithPortal',
+    value: function wrapWithPortal(children) {
+      var _this2 = this;
+
+      if (!this.state.active) {
+        return null;
+      }
+
+      return _react.default.createElement(_PortalCompat.default, {
+        node: this.props.node,
+        key: 'react-portal',
+        ref: function ref(portalNode) {
+          return _this2.portalNode = portalNode;
+        }
+      }, children);
+    }
+  }, {
+    key: 'handleOutsideMouseClick',
+    value: function handleOutsideMouseClick(e) {
+      if (!this.state.active) {
+        return;
+      }
+
+      var root = this.portalNode.props.node || this.portalNode.defaultNode;
+
+      if (!root || root.contains(e.target) || e.button && e.button !== 0) {
+        return;
+      }
+
+      this.closePortal();
+    }
+  }, {
+    key: 'handleKeydown',
+    value: function handleKeydown(e) {
+      if (e.keyCode === KEYCODES.ESCAPE && this.state.active) {
+        this.closePortal();
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return this.props.children({
+        openPortal: this.openPortal,
+        closePortal: this.closePortal,
+        portal: this.wrapWithPortal,
+        isOpen: this.state.active
+      });
+    }
+  }]);
+
+  return PortalWithState;
+}(_react.default.Component);
+
+PortalWithState.propTypes = {
+  children: _propTypes.default.func.isRequired,
+  defaultOpen: _propTypes.default.bool,
+  node: _propTypes.default.any,
+  closeOnEsc: _propTypes.default.bool,
+  closeOnOutsideClick: _propTypes.default.bool,
+  onOpen: _propTypes.default.func,
+  onClose: _propTypes.default.func
+};
+PortalWithState.defaultProps = {
+  onOpen: function onOpen() {},
+  onClose: function onClose() {}
+};
+var _default = PortalWithState;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./PortalCompat":"../node_modules/react-portal/es/PortalCompat.js"}],"../node_modules/react-portal/es/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Portal", {
+  enumerable: true,
+  get: function () {
+    return _PortalCompat.default;
+  }
+});
+Object.defineProperty(exports, "PortalWithState", {
+  enumerable: true,
+  get: function () {
+    return _PortalWithState.default;
+  }
+});
+
+var _PortalCompat = _interopRequireDefault(require("./PortalCompat"));
+
+var _PortalWithState = _interopRequireDefault(require("./PortalWithState"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./PortalCompat":"../node_modules/react-portal/es/PortalCompat.js","./PortalWithState":"../node_modules/react-portal/es/PortalWithState.js"}],"../node_modules/@neos-project/react-ui-components/lib-esm/Dialog/dialog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.DialogWithoutEscape = void 0;
+
+var tslib_1 = _interopRequireWildcard(require("tslib"));
+
+var _classnames = _interopRequireDefault(require("classnames"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _index = _interopRequireDefault(require("../enhanceWithClickOutside/index"));
+
+var _reactCloseOnEscape = _interopRequireDefault(require("react-close-on-escape"));
+
+var _reactPortal = require("react-portal");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+class DialogWithoutEscape extends _react.PureComponent {
+  constructor() {
+    super(...arguments);
+
+    this.handleReference = ref => {
+      this.ref = ref;
+    };
+
+    this.handleClickOutside = () => {
+      this.props.onRequestClose();
+    };
+
+    this.componentDidMount = () => {
+      document.addEventListener('keydown', event => this.handleKeyPress(event));
+
+      if (this.ref) {
+        this.ref.focus();
+      }
+    };
+
+    this.componentWillUnmount = () => {
+      document.removeEventListener('keydown', event => this.handleKeyPress(event));
+    };
+
+    this.handleKeyPress = event => {
+      if (event.key === 'Escape') {
+        this.props.onRequestClose();
+      }
+    };
+  }
+
+  render() {
+    const {
+      title,
+      children,
+      actions,
+      theme,
+      type
+    } = this.props;
+    const finalClassNameBody = (0, _classnames.default)(theme.dialog__body, {
+      [theme['dialog--success']]: type === 'success',
+      [theme['dialog--warn']]: type === 'warn',
+      [theme['dialog--error']]: type === 'error'
+    }, 'dialog__body');
+    return _react.default.createElement("div", {
+      ref: this.handleReference,
+      className: theme.dialog__contentsPosition,
+      tabIndex: 0
+    }, _react.default.createElement("div", {
+      className: theme.dialog__contents
+    }, _react.default.createElement("div", {
+      className: theme.dialog__title
+    }, title), _react.default.createElement("div", {
+      className: finalClassNameBody
+    }, children), actions && actions.length ? _react.default.createElement("div", {
+      className: theme.dialog__actions
+    }, _react.default.Children.map(actions, (action, index) => _react.default.createElement("span", {
+      key: index
+    }, action))) : null));
+  }
+
+}
+
+exports.DialogWithoutEscape = DialogWithoutEscape;
+const EnhancedDialogWithoutEscapeWithClickOutside = (0, _index.default)(DialogWithoutEscape);
+
+class DialogWithEscape extends _react.PureComponent {
+  constructor() {
+    super(...arguments);
+
+    this.onEscape = () => {
+      this.props.onRequestClose();
+    };
+  }
+
+  render() {
+    const _a = this.props,
+          {
+      className,
+      title,
+      style,
+      children,
+      isOpen,
+      actions,
+      theme,
+      type,
+      onRequestClose
+    } = _a,
+          rest = tslib_1.__rest(_a, ["className", "title", "style", "children", "isOpen", "actions", "theme", "type", "onRequestClose"]);
+
+    const sectionClassName = (0, _classnames.default)(theme.dialog, {
+      [theme['dialog--wide']]: style === 'wide',
+      [theme['dialog--narrow']]: style === 'narrow'
+    }, {
+      [theme['dialog--success']]: type === 'success',
+      [theme['dialog--warn']]: type === 'warn',
+      [theme['dialog--error']]: type === 'error'
+    }, className);
+
+    if (!this.props.isOpen) {
+      return null;
+    }
+
+    return _react.default.createElement(_reactCloseOnEscape.default, {
+      onEscape: this.onEscape
+    }, _react.default.createElement(_reactPortal.Portal, null, _react.default.createElement("section", Object.assign({}, rest, {
+      className: sectionClassName,
+      role: "dialog",
+      tabIndex: 0
+    }), _react.default.createElement(EnhancedDialogWithoutEscapeWithClickOutside, Object.assign({}, this.props)))));
+  }
+
+}
+
+var _default = DialogWithEscape;
+exports.default = _default;
+},{"tslib":"../node_modules/tslib/tslib.es6.js","classnames":"../node_modules/classnames/index.js","react":"../node_modules/react/index.js","../enhanceWithClickOutside/index":"../node_modules/@neos-project/react-ui-components/lib-esm/enhanceWithClickOutside/index.js","react-close-on-escape":"../node_modules/react-close-on-escape/dist/index.js","react-portal":"../node_modules/react-portal/es/index.js"}],"../node_modules/@neos-project/react-ui-components/lib-esm/Dialog/style.css":[function(require,module,exports) {
+
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      module.exports = {
+  "dialog": "_dialog_37a32 _reset_d338a",
+  "dialog__contentsPosition": "_dialog__contentsPosition_37a32 _reset_d338a",
+  "slideDialogContents": "_slideDialogContents_37a32",
+  "dialog__contents": "_dialog__contents_37a32 _reset_d338a",
+  "dialog--wide": "_dialog--wide_37a32",
+  "dialog--narrow": "_dialog--narrow_37a32",
+  "dialog--success": "_dialog--success_37a32",
+  "dialog--warn": "_dialog--warn_37a32",
+  "dialog--error": "_dialog--error_37a32",
+  "dialog__title": "_dialog__title_37a32 _reset_d338a",
+  "dialog__body": "_dialog__body_37a32",
+  "dialog__actions": "_dialog__actions_37a32 _reset_d338a",
+  "dialog__closeBtn": "_dialog__closeBtn_37a32 _reset_d338a",
+  "dialog__backDrop": "_dialog__backDrop_37a32 _reset_d338a"
+};
+},{"./../reset.css":"../node_modules/@neos-project/react-ui-components/lib-esm/reset.css","_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/@neos-project/react-ui-components/lib-esm/Dialog/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _reactCssThemr = require("@friendsofreactjs/react-css-themr");
+
+var _identifiers = _interopRequireDefault(require("../identifiers"));
+
+var _dialog = _interopRequireDefault(require("./dialog"));
+
+var _style = _interopRequireDefault(require("./style.css"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = (0, _reactCssThemr.themr)(_identifiers.default.dialog, _style.default)(_dialog.default);
+
+exports.default = _default;
+},{"@friendsofreactjs/react-css-themr":"../node_modules/@friendsofreactjs/react-css-themr/lib/index.js","../identifiers":"../node_modules/@neos-project/react-ui-components/lib-esm/identifiers.js","./dialog":"../node_modules/@neos-project/react-ui-components/lib-esm/Dialog/dialog.js","./style.css":"../node_modules/@neos-project/react-ui-components/lib-esm/Dialog/style.css"}],"components/NodeTypeFilter.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/MultiSelectBox/index"));
+
+var _index2 = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/Dialog/index"));
+
+var _index3 = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/IconButton/index"));
+
+var _index4 = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/Button/index"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 var _default = _react.default.memo(function NodeTypeFilter(props) {
-  return _react.default.createElement("div", null, _react.default.createElement("h2", null, "Node Type Filter"), _react.default.createElement(_index.default, null));
+  var _a = (0, _react.useState)(false),
+      isOpen = _a[0],
+      setOpen = _a[1];
+
+  return _react.default.createElement("div", null, _react.default.createElement(_index2.default, {
+    actions: [_react.default.createElement(_index4.default, {
+      key: "apply",
+      style: "lighter",
+      hoverStyle: "brand",
+      onClick: function onClick() {
+        return setOpen(false);
+      }
+    }, "Apply")],
+    title: "Extra Filters",
+    onRequestClose: function onRequestClose() {
+      return setOpen(false);
+    },
+    isOpen: isOpen
+  }, _react.default.createElement("div", null, _react.default.createElement(_index.default, {
+    options: props.nodeTypes,
+    optionValueField: "value",
+    searchOptions: props.nodeTypes
+  }))), _react.default.createElement(_index3.default, {
+    icon: "filter",
+    onClick: function onClick(e) {
+      setOpen(true);
+      e.stopPropagation();
+    }
+  }));
 });
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/MultiSelectBox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/MultiSelectBox/index.js"}],"components/SlimNodeTree.tsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/MultiSelectBox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/MultiSelectBox/index.js","@neos-project/react-ui-components/lib-esm/Dialog/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Dialog/index.js","@neos-project/react-ui-components/lib-esm/IconButton/index":"../node_modules/@neos-project/react-ui-components/lib-esm/IconButton/index.js","@neos-project/react-ui-components/lib-esm/Button/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Button/index.js"}],"components/SlimNodeTree.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -86500,7 +87296,9 @@ var SlimNode = _react.default.memo(function (props) {
 
   var label = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_index2.default, {
     isChecked: isChecked
-  }), " ", props.node.label, isChecked ? _react.default.createElement(_NodeTypeFilter.default, null) : null);
+  }), " ", props.node.label, isChecked ? _react.default.createElement(_NodeTypeFilter.default, {
+    nodeTypes: props.nodeTypes
+  }) : null);
 
   return _react.default.createElement(_index.default.Node, null, _react.default.createElement(_index.default.Node.Header, {
     isActive: isChecked,
@@ -86520,7 +87318,8 @@ var SlimNode = _react.default.memo(function (props) {
     return _react.default.createElement(SlimNode, {
       nodes: props.nodes,
       node: childNode,
-      level: props.level + 1
+      level: props.level + 1,
+      nodeTypes: props.nodeTypes
     });
   })));
 });
@@ -86539,7 +87338,8 @@ var _default = _react.default.memo(function SlimNodeTree(props) {
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_index.default, null, _react.default.createElement(SlimNode, {
     nodes: props.nodes,
     node: rootNode,
-    level: 1
+    level: 1,
+    nodeTypes: props.nodeTypes
   })));
 });
 
@@ -86692,16 +87492,6 @@ function PermissionWidget(props) {
       setNodes(responseJson);
     });
   }, [props.csrfProtectionToken, siteNode]);
-  var opts = [{
-    label: 'Foo',
-    value: 'bla'
-  }, {
-    label: 'Foo2',
-    value: 'bla2'
-  }, {
-    label: 'Foo3',
-    value: 'bla3'
-  }];
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("input", {
     type: "hidden",
     name: name,
@@ -86726,7 +87516,8 @@ function PermissionWidget(props) {
     }
   }), _react.default.createElement(_SlimNodeTree.default, {
     nodes: nodes,
-    rootNodeContextPath: siteNode
+    rootNodeContextPath: siteNode,
+    nodeTypes: props.nodeTypes
   }));
 }
 
@@ -86805,7 +87596,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54462" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64582" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

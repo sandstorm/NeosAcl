@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState, useMemo } from 'react';
 import Tree from '@neos-project/react-ui-components/lib-esm/Tree/index';
 import CheckBox from '@neos-project/react-ui-components/lib-esm/Checkbox/index';
 import NodeTypeFilter from './NodeTypeFilter';
+import { NodeType } from '../types';
 
 type NodeChildrenReference = {
     readonly contextPath: string;
@@ -18,6 +19,7 @@ type Node = {
 };
 
 type SlimNodeTreeProps = {
+    nodeTypes: NodeType[];
     nodes: Node[];
     rootNodeContextPath: string;
 };
@@ -25,6 +27,7 @@ type SlimNodeTreeProps = {
 
 
 type SlimNodeProps = {
+    nodeTypes: NodeType[];
     nodes: Node[];
     node: Node;
     level: number;
@@ -50,7 +53,7 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
     const label = (
         <>
             <CheckBox isChecked={isChecked} /> {props.node.label}
-            {isChecked ? <NodeTypeFilter /> : null}
+            {isChecked ? <NodeTypeFilter nodeTypes={props.nodeTypes} /> : null}
         </>
     );
 
@@ -72,7 +75,7 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
                 null
                 :
                 <Tree.Node.Contents>
-                    {childNodes.map(childNode => <SlimNode nodes={props.nodes} node={childNode} level={props.level + 1} />)}
+                    {childNodes.map(childNode => <SlimNode nodes={props.nodes} node={childNode} level={props.level + 1} nodeTypes={props.nodeTypes} />)}
                 </Tree.Node.Contents>
             }
 
@@ -94,7 +97,7 @@ export default React.memo(function SlimNodeTree(props: SlimNodeTreeProps) {
         <>
         <Tree>
 
-            <SlimNode nodes={props.nodes} node={rootNode} level={1} />
+            <SlimNode nodes={props.nodes} node={rootNode} level={1} nodeTypes={props.nodeTypes} />
         </Tree>
         </>
     );

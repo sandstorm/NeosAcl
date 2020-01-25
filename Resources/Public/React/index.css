@@ -1081,5 +1081,118 @@ svg:not(:root).svg-inline--fa {
         cursor: not-allowed;
     }
 
+@-webkit-keyframes _slideDialogContents_37a32 {
+    from {
+        opacity: 0;
+        -webkit-transform: translateX(-50%) translateY(-50%) scale(.9);
+                transform: translateX(-50%) translateY(-50%) scale(.9);
+    }
+}
+
+@keyframes _slideDialogContents_37a32 {
+    from {
+        opacity: 0;
+        -webkit-transform: translateX(-50%) translateY(-50%) scale(.9);
+                transform: translateX(-50%) translateY(-50%) scale(.9);
+    }
+}
+
+._dialog_37a32 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0, .8);
+}
+
+._dialog__contentsPosition_37a32 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+            transform: translateX(-50%) translateY(-50%) scale(1);
+    background: #222;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
+    border-radius: 0;
+    outline: none;
+    opacity: 1;
+    -webkit-animation: _slideDialogContents_37a32 .3s ease-in-out;
+            animation: _slideDialogContents_37a32 .3s ease-in-out;
+}
+
+._dialog__contents_37a32 {
+    position: relative;
+    width: calc(100vw - 40px * 2);
+    max-width: calc(40px * 16);
+    border: 2px solid #3f3f3f;
+}
+
+._dialog--wide_37a32 ._dialog__contents_37a32 {
+        max-width: calc(40px * 24);
+    }
+
+@media(max-width: 576px) {
+
+._dialog--wide_37a32 ._dialog__contents_37a32 {
+            max-width: 100vw;
+            width: 100vw
+    }
+        }
+
+._dialog--narrow_37a32 ._dialog__contents_37a32 {
+        max-width: 400px;
+    }
+
+._dialog--success_37a32 ._dialog__contents_37a32 {
+        border-color: #00a338;
+    }
+
+._dialog--warn_37a32 ._dialog__contents_37a32 {
+        border-color: #ff8700;
+    }
+
+._dialog--error_37a32 ._dialog__contents_37a32 {
+        border-color: #ff460d;
+    }
+
+._dialog__title_37a32 {
+    font-size: 20px;
+    line-height: 1.2;
+    padding: 16px;
+    padding-right: 40px;
+}
+
+._dialog__body_37a32 {
+    max-height: calc(65vh);
+    overflow-y: auto;
+}
+
+@media(max-width: 576px) {
+
+._dialog__body_37a32 {
+        max-height: calc(55vh)
+}
+    }
+
+._dialog__actions_37a32 {
+    text-align: right;
+    margin-top: 16px;
+}
+
+._dialog__closeBtn_37a32 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #3f3f3f;
+}
+
+._dialog__backDrop_37a32 {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
 
 /*# sourceMappingURL=/index.css.map */
