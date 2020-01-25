@@ -79619,31 +79619,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/MultiSelectBox/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 var _default = _react.default.memo(function WorkspaceSelector(props) {
-  var _a = (0, _react.useState)([]),
-      selectedWorkspace = _a[0],
-      setSelectedWorkspace = _a[1];
-
-  console.log("WS", props.workspaces);
   return _react.default.createElement("div", null, _react.default.createElement("h2", null, "Workspace Restriction"), _react.default.createElement(_index.default, {
     options: props.workspaces,
     optionValueField: "name",
-    onValuesChange: function onValuesChange(newValues) {
-      console.log("NEWNV", newValues);
-      setSelectedWorkspace(newValues);
-    },
+    onValuesChange: props.onSelectedWorkspacesChanged,
     searchOptions: props.workspaces,
-    values: selectedWorkspace,
+    values: props.selectedWorkspaces,
     placeholder: "Restrict to a single workspace"
   }));
 });
@@ -86448,7 +86436,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = (0, _reactCssThemr.themr)(_identifiers.default.checkBox, _style.default)(_checkBox.default);
 
 exports.default = _default;
-},{"@friendsofreactjs/react-css-themr":"../node_modules/@friendsofreactjs/react-css-themr/lib/index.js","../identifiers":"../node_modules/@neos-project/react-ui-components/lib-esm/identifiers.js","./checkBox":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/checkBox.js","./style.css":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/style.css"}],"components/SlimNodeTree.tsx":[function(require,module,exports) {
+},{"@friendsofreactjs/react-css-themr":"../node_modules/@friendsofreactjs/react-css-themr/lib/index.js","../identifiers":"../node_modules/@neos-project/react-ui-components/lib-esm/identifiers.js","./checkBox":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/checkBox.js","./style.css":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/style.css"}],"components/NodeTypeFilter.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/MultiSelectBox/index"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = _react.default.memo(function NodeTypeFilter(props) {
+  return _react.default.createElement("div", null, _react.default.createElement("h2", null, "Node Type Filter"), _react.default.createElement(_index.default, null));
+});
+
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/MultiSelectBox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/MultiSelectBox/index.js"}],"components/SlimNodeTree.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -86461,6 +86468,8 @@ var _react = _interopRequireWildcard(require("react"));
 var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/Tree/index"));
 
 var _index2 = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/Checkbox/index"));
+
+var _NodeTypeFilter = _interopRequireDefault(require("./NodeTypeFilter"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -86491,7 +86500,7 @@ var SlimNode = _react.default.memo(function (props) {
 
   var label = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_index2.default, {
     isChecked: isChecked
-  }), " ", props.node.label);
+  }), " ", props.node.label, isChecked ? _react.default.createElement(_NodeTypeFilter.default, null) : null);
 
   return _react.default.createElement(_index.default.Node, null, _react.default.createElement(_index.default.Node.Header, {
     isActive: isChecked,
@@ -86535,7 +86544,60 @@ var _default = _react.default.memo(function SlimNodeTree(props) {
 });
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/Tree/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Tree/index.js","@neos-project/react-ui-components/lib-esm/Checkbox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/index.js"}],"PermissionWidget.tsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/Tree/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Tree/index.js","@neos-project/react-ui-components/lib-esm/Checkbox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/index.js","./NodeTypeFilter":"components/NodeTypeFilter.tsx"}],"components/DimensionPresetSelector.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/MultiSelectBox/index"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var __assign = void 0 && (void 0).__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var _default = _react.default.memo(function DimensionPresetSelector(props) {
+  var preparedOptions = (0, _react.useMemo)(function () {
+    return props.dimensionPresets.map(function (dimensionPreset) {
+      return __assign(__assign({}, dimensionPreset), {
+        label: dimensionPreset.dimensionLabel + ": " + dimensionPreset.presetLabel
+      });
+    });
+  }, [props.dimensionPresets]);
+  return _react.default.createElement("div", null, _react.default.createElement("h2", null, "DimensionPreset Restriction"), _react.default.createElement(_index.default, {
+    options: preparedOptions,
+    optionValueField: "contentDimensionAndPreset",
+    onValuesChange: props.onSelectedDimensionPresetsChanged,
+    searchOptions: preparedOptions,
+    values: props.selectedDimensionPresets,
+    placeholder: "Restrict to a single dimensionPreset"
+  }));
+});
+
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/MultiSelectBox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/MultiSelectBox/index.js"}],"PermissionWidget.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -86549,13 +86611,13 @@ var _WorkspaceSelector = _interopRequireDefault(require("./components/WorkspaceS
 
 var _immer = _interopRequireDefault(require("immer"));
 
-var _index = _interopRequireDefault(require("@neos-project/react-ui-components/lib-esm/SelectBox/index"));
-
 var _reactDnd = require("react-dnd");
 
 var _reactDndHtml5Backend = _interopRequireDefault(require("react-dnd-html5-backend"));
 
 var _SlimNodeTree = _interopRequireDefault(require("./components/SlimNodeTree"));
+
+var _DimensionPresetSelector = _interopRequireDefault(require("./components/DimensionPresetSelector"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -86564,27 +86626,20 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var initialState = {
-  constraints: []
+  selectedWorkspaces: [],
+  dimensionPresets: []
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'add':
+    case 'setSelectedWorkspaces':
       return (0, _immer.default)(state, function (draftState) {
-        draftState.constraints.push({
-          type: action.constraintType,
-          value: ""
-        });
+        draftState.selectedWorkspaces = action.workspaceNames;
       });
 
-    case 'setParameter':
+    case 'setDimensionPresets':
       return (0, _immer.default)(state, function (draftState) {
-        draftState.constraints[action.conditionIndex].value = action.value;
-      });
-
-    case 'remove':
-      return (0, _immer.default)(state, function (draftState) {
-        draftState.constraints.splice(action.conditionIndex, 1);
+        draftState.dimensionPresets = action.dimensionPresets;
       });
 
     default:
@@ -86592,7 +86647,8 @@ function reducer(state, action) {
   }
 }
 
-var withDragDropContext = (0, _reactDnd.DragDropContext)(_reactDndHtml5Backend.default);
+var withDragDropContext = (0, _reactDnd.DragDropContext)(_reactDndHtml5Backend.default); // TODO
+
 var siteNode = '/sites/neosdemo@user-admin;language=en_US';
 
 function PermissionWidget(props) {
@@ -86602,12 +86658,15 @@ function PermissionWidget(props) {
       nodes = _a[0],
       setNodes = _a[1];
 
+  var _b = (0, _react.useReducer)(reducer, initialState),
+      state = _b[0],
+      dispatch = _b[1];
+
   (0, _react.useEffect)(function () {
     fetch('/neos/ui-services/flow-query', {
       credentials: "same-origin",
       method: 'POST',
       headers: {
-        // TODO
         'X-Flow-Csrftoken': props.csrfProtectionToken,
         'Content-Type': 'application/json'
       },
@@ -86633,7 +86692,6 @@ function PermissionWidget(props) {
       setNodes(responseJson);
     });
   }, [props.csrfProtectionToken, siteNode]);
-  var state = {};
   var opts = [{
     label: 'Foo',
     value: 'bla'
@@ -86649,18 +86707,24 @@ function PermissionWidget(props) {
     name: name,
     value: JSON.stringify(state)
   }), _react.default.createElement(_WorkspaceSelector.default, {
-    workspaces: props.workspaces
-  }), _react.default.createElement(_index.default, {
-    options: [{
-      label: 'Foo',
-      value: 'bla'
-    }, {
-      label: 'Foo2',
-      value: 'bla2'
-    }],
-    optionValueField: "value",
-    placeholder: "Test"
-  }), "B", _react.default.createElement(_SlimNodeTree.default, {
+    workspaces: props.workspaces,
+    selectedWorkspaces: state.selectedWorkspaces,
+    onSelectedWorkspacesChanged: function onSelectedWorkspacesChanged(workspaceNames) {
+      return dispatch({
+        type: 'setSelectedWorkspaces',
+        workspaceNames: workspaceNames
+      });
+    }
+  }), _react.default.createElement(_DimensionPresetSelector.default, {
+    dimensionPresets: props.dimensions,
+    selectedDimensionPresets: state.dimensionPresets,
+    onSelectedDimensionPresetsChanged: function onSelectedDimensionPresetsChanged(dimensionPresets) {
+      return dispatch({
+        type: 'setDimensionPresets',
+        dimensionPresets: dimensionPresets
+      });
+    }
+  }), _react.default.createElement(_SlimNodeTree.default, {
     nodes: nodes,
     rootNodeContextPath: siteNode
   }));
@@ -86669,14 +86733,12 @@ function PermissionWidget(props) {
 var _default = withDragDropContext(PermissionWidget);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./components/WorkspaceSelector":"components/WorkspaceSelector.tsx","immer":"../node_modules/immer/dist/immer.module.js","@neos-project/react-ui-components/lib-esm/SelectBox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/SelectBox/index.js","react-dnd":"../node_modules/react-dnd/lib/index.js","react-dnd-html5-backend":"../node_modules/react-dnd-html5-backend/lib/index.js","./components/SlimNodeTree":"components/SlimNodeTree.tsx"}],"style.css":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./components/WorkspaceSelector":"components/WorkspaceSelector.tsx","immer":"../node_modules/immer/dist/immer.module.js","react-dnd":"../node_modules/react-dnd/lib/index.js","react-dnd-html5-backend":"../node_modules/react-dnd-html5-backend/lib/index.js","./components/SlimNodeTree":"components/SlimNodeTree.tsx","./components/DimensionPresetSelector":"components/DimensionPresetSelector.tsx"}],"style.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-module.exports = {
-  "wrapper": "_wrapper_148cd"
-};
+module.exports = {};
 },{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.tsx":[function(require,module,exports) {
 "use strict";
 

@@ -1081,11 +1081,5 @@ svg:not(:root).svg-inline--fa {
         cursor: not-allowed;
     }
 
-/* https://github.com/MadLittleMods/postcss-increase-specificity*/
-._wrapper_148cd div {
-    padding: initial;
-    margin: initial;
-}
-
 
 /*# sourceMappingURL=/index.css.map */

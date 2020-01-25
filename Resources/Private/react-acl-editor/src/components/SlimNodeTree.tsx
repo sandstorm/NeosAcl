@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState, useMemo } from 'react';
 import Tree from '@neos-project/react-ui-components/lib-esm/Tree/index';
 import CheckBox from '@neos-project/react-ui-components/lib-esm/Checkbox/index';
+import NodeTypeFilter from './NodeTypeFilter';
 
 type NodeChildrenReference = {
     readonly contextPath: string;
@@ -49,6 +50,7 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
     const label = (
         <>
             <CheckBox isChecked={isChecked} /> {props.node.label}
+            {isChecked ? <NodeTypeFilter /> : null}
         </>
     );
 

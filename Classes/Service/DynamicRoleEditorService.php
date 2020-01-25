@@ -9,6 +9,7 @@ namespace Sandstorm\NeosAcl\Service;
 use Doctrine\DBAL\Connection;
 use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
+use Neos\ContentRepository\Domain\Service\ContentDimensionPresetSourceInterface;
 use Neos\ContentRepository\Domain\Service\NodeTypeManager;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
@@ -65,6 +66,12 @@ class DynamicRoleEditorService
      */
     protected $workspaceRepository;
 
+    /**
+     * @Flow\Inject
+     * @var ContentDimensionPresetSourceInterface
+     */
+    protected $contentDimensionPresetSource;
+
     public function generatePropsForReactWidget(ActionRequest $actionRequest): string
     {
         $props = [
@@ -74,7 +81,8 @@ class DynamicRoleEditorService
 
             'csrfProtectionToken' => $this->securityContext->getCsrfProtectionToken(),
             'cssFilePath' => $this->resourceManager->getPublicPackageResourceUriByPath('resource://Sandstorm.NeosAcl/Public/React/index.css'),
-            'workspaces' => $this->getWorkspaces()
+            'workspaces' => $this->getWorkspaces(),
+            'dimensions' => $this->getDimensionPresets()
         ];
 
         return json_encode($props);
@@ -114,6 +122,22 @@ class DynamicRoleEditorService
             }
         }
 
+        return $result;
+    }
+
+    protected function getDimensionPresets()
+    {
+        $result = [];
+
+        foreach ($this->contentDimensionPresetSource->getAllPresets() as $dimensionName => $dimensionConfig) {
+            foreach ($dimensionConfig['presets'] as $presetName => $presetConfig) {
+                $result[] = [
+                    'contentDimensionAndPreset' => $dimensionName . '|||' . $presetName,
+                    'dimensionLabel' => $dimensionConfig['label'],
+                    'presetLabel' => $presetConfig['label'],
+                ];
+            }
+        }
         return $result;
     }
 }

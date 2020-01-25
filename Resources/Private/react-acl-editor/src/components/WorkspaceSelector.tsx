@@ -9,24 +9,23 @@ export type Workspace = {
 
 type WorkspaceSelectorProps = {
     workspaces: Workspace[];
+    selectedWorkspaces: string[];
+    onSelectedWorkspacesChanged: (newNames: string[]) => void;
 };
 
 
 
 
 export default React.memo(function WorkspaceSelector(props: WorkspaceSelectorProps) {
-    const [selectedWorkspace, setSelectedWorkspace] = useState([]);
-
-    console.log("WS", props.workspaces);
     return (
         <div>
             <h2>Workspace Restriction</h2>
             <MultiSelectBox
                 options={props.workspaces}
                 optionValueField="name"
-                onValuesChange={(newValues: any) => {console.log("NEWNV", newValues); setSelectedWorkspace(newValues)}}
+                onValuesChange={props.onSelectedWorkspacesChanged}
                 searchOptions={props.workspaces}
-                values={selectedWorkspace}
+                values={props.selectedWorkspaces}
                 placeholder="Restrict to a single workspace"
             />
         </div>
