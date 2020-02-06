@@ -12,6 +12,10 @@ Main features:
 - Permissions on the node tree, workspaces and dimensions possible.
 - Permissions work predictably with sane defaults and purely-additive logic.
 
+![listing](./Documentation/listing.png)
+
+![edit](./Documentation/edit.png)
+
 ## Development 
 
 **Initial (Package) Setup**
