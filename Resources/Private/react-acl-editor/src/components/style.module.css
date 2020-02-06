@@ -1,0 +1,26 @@
+.nodeTypeFilterButton {
+    display: inline;
+}
+
+.filterIconButton {
+    height: 22px;
+    line-height: 0;
+}
+
+
+.nodeTypeFilterContainer {
+    min-height: 40vh;
+}
+
+
+.slimNodeTree *[role="button"] .filterIconButton {
+    display: none;
+}
+
+.slimNodeTree *[role="button"] .filterIconButton.filterIconButton--active {
+    display: inline;
+}
+
+.slimNodeTree *[role="button"]:hover .filterIconButton {
+    display: inline;
+}

@@ -40,8 +40,10 @@
     "typescript": "3.7.4"
   },
   "scripts": {
-    "dev": "parcel serve src/index.tsx --out-dir ../../Public/React/",
-    "build": "parcel build src/index.tsx --out-dir ../../Public/React/"
+    "dev": "concurrently -k npm:dev:parcel npm:dev:wrap-nodesass",
+    "dev:parcel": "parcel serve src/index.tsx --out-dir ../../Public/React/",
+    "dev:wrap-nodesass": "node-sass extra-neos-wrapper.scss -o ../../Public/React/ && node-sass -w extra-neos-wrapper.scss -o ../../Public/React/",
+    "build": "parcel build src/index.tsx --out-dir ../../Public/React/ && node-sass extra-neos-wrapper.scss -o ../../Public/React/"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -55,9 +57,11 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@types/codemirror": "^0.0.72",
-    "@types/lodash": "^4.14.121",
+    "@types/lodash": "^4.14.149",
     "autoprefixer": "^9.7.4",
     "babel-loader": "^8.0.5",
+    "concurrently": "^5.1.0",
+    "node-sass": "^4.13.1",
     "parcel-bundler": "^1.12.4",
     "postcss-hexrgba": "^2.0.0",
     "postcss-import": "^12.0.1",

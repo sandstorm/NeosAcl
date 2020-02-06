@@ -25,6 +25,7 @@ use Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivile
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\NodePrivilegeSubject;
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\ReadNodePrivilege;
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege;
+use Sandstorm\NeosAcl\Domain\Dto\MatcherConfiguration;
 use Sandstorm\NeosAcl\Domain\Model\DynamicRole;
 use Sandstorm\NeosAcl\Dto\ACLCheckerDto;
 use Sandstorm\NeosAcl\DynamicRoleEnforcement\DynamicPolicyRegistry;
@@ -52,33 +53,19 @@ class DynamicRoleGeneratorService
         // NOTE: this hook seems to be only triggered in runtime; not in compiletime (which is great for us!)
 
         $customConfiguration = [];
-        $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Foo:Bar'] = [
-            'matcher' => 'true'
-        ];
-        $customConfiguration['roles']['Dynamic:Foo'] = [
-            'abstract' => false,
-            'parentRoles' => ['Neos.Neos:AbstractEditor'],
-            /*'privileges' => [
-                [
-                    'privilegeTarget' => 'Foo:Bar',
-                    'permission' => 'GRANT'
-                ]
-            ]*/
-        ];
-
-        $this->dynamicPolicyRegistry->registerDynamicPolicyAndMergeThemWithOriginal($customConfiguration, $configuration);
-
-
-        return;
-
         $connection = $this->entityManager->getConnection();
         $rows = $connection->executeQuery('SELECT name, abstract, parentrolenames, matcher, privilege FROM sandstorm_neosacl_domain_model_dynamicrole')->fetchAll();
         foreach ($rows as $row) {
 
-            $matcher = self::buildMatcherString(json_decode($row['matcher'], true));
+            $matcherConfig = json_decode($row['matcher'], true);
+            $matcher = MatcherConfiguration::fromJson($matcherConfig)->toPolicyMatcherString();
             $privileges = [];
 
             if ($row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT || $row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE) {
+                $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name'] . '.EditNode'] = [
+                    'matcher' => $matcher
+                ];
+
                 $privileges[] = [
                     'privilegeTarget' => 'Dynamic:' . $row['name'] . '.EditNode',
                     'permission' => 'GRANT'
@@ -86,6 +73,13 @@ class DynamicRoleGeneratorService
             }
 
             if ($row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE) {
+                $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege']['Dynamic:' . $row['name'] . '.CreateNode'] = [
+                    'matcher' => $matcher
+                ];
+                $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege']['Dynamic:' . $row['name'] . '.RemoveNode'] = [
+                    'matcher' => $matcher
+                ];
+
                 $privileges[] = [
                     'privilegeTarget' => 'Dynamic:' . $row['name'] . '.CreateNode',
                     'permission' => 'GRANT'
@@ -101,28 +95,8 @@ class DynamicRoleGeneratorService
                 'parentRoles' => json_decode($row['parentrolenames'], true),
                 'privileges' => $privileges
             ];
-
-            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name'] . '.EditNode'] = [
-                'matcher' => $matcher
-            ];
-
-            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege']['Dynamic:' . $row['name'] . '.CreateNode'] = [
-                'matcher' => $matcher
-            ];
-
-            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege']['Dynamic:' . $row['name'] . '.RemoveNode'] = [
-                'matcher' => $matcher
-            ];
-        }
-    }
-
-    static private function buildMatcherString(array $matcher): string
-    {
-        $matcherStringParts = [];
-        foreach ($matcher['constraints'] as $constraint) {
-            $matcherStringParts[] = sprintf('%s("%s")', $constraint['type'], $constraint['value']);
         }
 
-        return implode(' && ', $matcherStringParts);
+        $this->dynamicPolicyRegistry->registerDynamicPolicyAndMergeThemWithOriginal($customConfiguration, $configuration);
     }
 }

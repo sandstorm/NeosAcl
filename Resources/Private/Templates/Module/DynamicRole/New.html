@@ -24,8 +24,17 @@
             </li>
 
             <li>
-                <label for="privileges">Privileges</label>
-                <div id="privileges" class="dynamic-editor" data-props="{dynamicEditorProps}"  />
+                <label for="privilege">Privilege</label>
+                <div id="privilege">
+                    <f:form.hidden property="privilege" />
+                </div>
+            </li>
+
+            <li>
+                <label for="matcher">Matcher</label>
+                <div id="matcher" class="dynamic-editor" data-props="{dynamicEditorProps}">
+                    <f:form.hidden property="matcher" />
+                </div>
             </li>
 
             <li>

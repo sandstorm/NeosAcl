@@ -3,6 +3,8 @@ import MultiSelectBox from '@neos-project/react-ui-components/lib-esm/MultiSelec
 import Dialog from '@neos-project/react-ui-components/lib-esm/Dialog/index';
 import IconButton from '@neos-project/react-ui-components/lib-esm/IconButton/index';
 import Button from '@neos-project/react-ui-components/lib-esm/Button/index';
+import style from './style.module.css';
+import classnames from 'classnames';
 
 type NodeType = {
     value: string,
@@ -10,7 +12,11 @@ type NodeType = {
 }
 
 type NodeTypeFilterProps = {
-    nodeTypes: NodeType[]
+    whitelistedNodeTypes: string[];
+    onWhitelistedNodeTypesChanged: (newSelection: string[]) => void;
+
+    nodeTypes: NodeType[];
+    className?: string;
 };
 
 
@@ -18,10 +24,14 @@ type NodeTypeFilterProps = {
 
 export default React.memo(function NodeTypeFilter(props: NodeTypeFilterProps) {
 
-    const [isOpen, setOpen] = useState(false);
+    const iconButtonClassNames = classnames({
+        [style.filterIconButton]: true,
+        [style['filterIconButton--active']]: props.whitelistedNodeTypes.length > 0
+    });
 
+    const [isOpen, setOpen] = useState(false);
     return (
-        <div>
+        <div className={style.nodeTypeFilterButton} onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
             <Dialog
                 actions={[
                     <Button
@@ -37,16 +47,19 @@ export default React.memo(function NodeTypeFilter(props: NodeTypeFilterProps) {
                 onRequestClose={() => setOpen(false)}
                 isOpen={isOpen}
             >
-                <div>
+                <div className={style.nodeTypeFilterContainer}>
                     <MultiSelectBox
                         options={props.nodeTypes}
                         optionValueField="value"
                         searchOptions={props.nodeTypes}
+                        values={props.whitelistedNodeTypes}
+                        onValuesChange={props.onWhitelistedNodeTypesChanged}
+                        placeholder="Restrict to some NodeTypes"
                     />
                 </div>
             </Dialog>
 
-            <IconButton icon="filter" onClick={(e) => { setOpen(true); e.stopPropagation(); }} />
+            <IconButton className={iconButtonClassNames} icon="filter" size="small" style="transparent" onClick={(e) => { setOpen(true); e.stopPropagation(); }} />
         </div>
     );
 });

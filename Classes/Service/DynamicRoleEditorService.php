@@ -72,15 +72,23 @@ class DynamicRoleEditorService
      */
     protected $contentDimensionPresetSource;
 
+    /**
+     * @Flow\Inject
+     * @var ContextFactoryInterface
+     */
+    protected $contextFactory;
+
+
     public function generatePropsForReactWidget(ActionRequest $actionRequest): string
     {
         $props = [
             'nodeTypes' => $this->generateNodeTypeNames(),
             'nodeSearchEndpoint' => $this->generateNodeSearchEndpoint($actionRequest),
+            'siteNode' => $this->getSiteNodeContextPath(),
 
 
             'csrfProtectionToken' => $this->securityContext->getCsrfProtectionToken(),
-            'cssFilePath' => $this->resourceManager->getPublicPackageResourceUriByPath('resource://Sandstorm.NeosAcl/Public/React/index.css'),
+            'cssFilePath' => $this->resourceManager->getPublicPackageResourceUriByPath('resource://Sandstorm.NeosAcl/Public/React/extra-neos-wrapper.css'),
             'workspaces' => $this->getWorkspaces(),
             'dimensions' => $this->getDimensionPresets()
         ];
@@ -139,5 +147,14 @@ class DynamicRoleEditorService
             }
         }
         return $result;
+    }
+
+    public function getSiteNodeContextPath(): string
+    {
+        $context = $this->contextFactory->create([
+            'workspaceName' => 'live'
+        ]);
+
+        return $context->getCurrentSiteNode()->getContextPath();
     }
 }
