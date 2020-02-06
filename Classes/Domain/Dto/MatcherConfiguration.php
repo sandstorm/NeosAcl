@@ -111,4 +111,34 @@ class MatcherConfiguration
         return '(' . implode(' || ', $matcherParts) . ')';
     }
 
+    public function renderExplanationParts(): array
+    {
+        $explanation = [];
+
+        if (count($this->selectedWorkspaces)) {
+            $explanation[] = [
+                'title' => 'Workspaces',
+                'details' => implode(', ', $this->selectedWorkspaces)
+            ];
+        }
+
+        if (count($this->dimensionPresets)) {
+            $explanation[] = [
+                'title' => 'Dimensions',
+                'details' => implode(', ', $this->dimensionPresets)
+            ];
+        }
+
+        if (count($this->selectedNodes)) {
+            $explanation[] = [
+                'title' => count($this->selectedNodes) . ' Nodes',
+                'details' => implode(', ', array_map(function(MatcherConfigurationSelectedNode $nodeConfig) {
+                    return $nodeConfig->getNodeIdentifier();
+                }, $this->selectedNodes))
+            ];
+        }
+
+        return $explanation;
+    }
+
 }

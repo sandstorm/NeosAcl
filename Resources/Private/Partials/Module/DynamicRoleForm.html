@@ -1,0 +1,107 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+<div class="neos-row neos-module-container">
+    <div class="neos-span6">
+        <fieldset>
+            <legend>Basic Configuration</legend>
+
+            <div class="neos-control-group{f:validation.ifHasErrors(for: 'name', then: ' neos-error')}">
+                <label class="neos-control-label" for="name">Name of role</label>
+                <div class="neos-controls neos-controls-row">
+                    <f:form.textfield property="name" id="name" class="neos-span6"/>
+                    <f:render partial="Module/Shared/FieldValidationResults" arguments="{fieldname: 'name'}"/>
+                </div>
+                <div class="neos-help-block">As roles are referenced by name, do not modify the name after its
+                    creation.
+                </div>
+            </div>
+
+        </fieldset>
+        <fieldset>
+            <legend>Role Details</legend>
+
+            <div class="neos-control-group{f:validation.ifHasErrors(for: 'abstract', then: ' neos-error')}">
+                <label class="neos-control-label">Role type</label>
+                <div class="neos-controls">
+                    <label class="neos-radio neos-inline">
+                        <f:form.radio property="abstract" value=""/>
+                        <span></span>
+                        Non-Abstract Role
+                    </label>
+
+                    <label class="neos-radio neos-inline">
+                        <f:form.radio property="abstract" value="true"/>
+                        <span></span>
+                        Abstract Role
+                    </label>
+                </div>
+                <div class="neos-help-block">Abstract roles cannot be assigned directly to users, but can be used as
+                    base for other roles. Normally, you want to create non-abstract roles.
+                </div>
+            </div>
+
+
+            <div class="neos-control-group">
+                <label class="neos-control-label">Parent Roles</label>
+                <f:for each="{availableRoles}" as="role" iteration="rolesIteration">
+                    <div class="neos-controls">
+                        <label for="roles-{rolesIteration.cycle}" class="neos-checkbox" title="{role.packageKey}"
+                               data-neos-toggle="tooltip" data-placement="right">
+                            <f:form.checkbox property="parentRoleNames" multiple="true" value="{role.identifier}"
+                                             id="roles-{rolesIteration.cycle}"/>
+                            <span></span>
+                            {role.name}
+                        </label>
+                    </div>
+                </f:for>
+                <div class="neos-help-block">
+                    <b>RestrictedEditor</b> is the base role needed to interact with the Neos backend. Start here, and then add custom permissions.<br />
+                    <b>LivePublisher</b> is a "mixin" which is combinable with RestrictedEditor, if the user should be allowed to publish to the live workspace.
+                </div>
+            </div>
+
+        </fieldset>
+        <fieldset>
+            <legend>Permissions</legend>
+
+            <div class="neos-control-group{f:validation.ifHasErrors(for: 'privilege', then: ' neos-error')}">
+                <label class="neos-control-label">Privilege</label>
+                <div class="neos-controls">
+                    <label class="neos-radio neos-inline">
+                        <f:form.radio property="privilege" value="view" checked="true"/>
+                        <span></span>
+                        View
+                    </label>
+
+                    <label class="neos-radio neos-inline">
+                        <f:form.radio property="privilege" value="view_edit"/>
+                        <span></span>
+                        View & Edit
+                    </label>
+
+                    <label class="neos-radio neos-inline">
+                        <f:form.radio property="privilege" value="view_edit_create_delete"/>
+                        <span></span>
+                        View & Edit & Create & Delete
+                    </label>
+                </div>
+                <div class="neos-help-block">What level of access do you want to grant?</div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="neos-span6">
+        <legend>Select Nodes</legend>
+        <fieldset>
+            <div id="matcher" class="dynamic-editor" data-props="{dynamicEditorProps}">
+                <f:form.hidden property="matcher" value="{dynamicRole.matcher -> f:format.json()}"/>
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="neos-footer">
+    <f:link.action action="index"
+                   class="neos-button">{neos:backend.translate(id: 'cancel', value: 'Cancel')}
+    </f:link.action>
+    <f:form.submit
+        value="{f:if(condition: saveText, then: saveText, else: '{neos:backend.translate(id: \'save\', value: \'Save\')}')}"
+        class="neos-button neos-button-primary"/>
+</div>

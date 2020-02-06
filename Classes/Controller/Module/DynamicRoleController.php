@@ -8,6 +8,9 @@ namespace Sandstorm\NeosAcl\Controller\Module;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use Neos\Flow\Property\TypeConverter\ArrayConverter;
+use Neos\Flow\Security\Policy\PolicyService;
+use Neos\Flow\Security\Policy\Role;
+use Neos\Fusion\Core\Cache\ContentCache;
 use Sandstorm\NeosAcl\Domain\Model\DynamicRole;
 use Sandstorm\NeosAcl\Service\DynamicRoleEditorService;
 
@@ -27,6 +30,18 @@ class DynamicRoleController extends ActionController
     protected $dynamicRoleEditorService;
 
     /**
+     * @Flow\Inject
+     * @var PolicyService
+     */
+    protected $policyService;
+
+    /**
+     * @Flow\Inject
+     * @var ContentCache
+     */
+    protected $contentCache;
+
+    /**
      * @return void
      */
     public function indexAction()
@@ -35,20 +50,19 @@ class DynamicRoleController extends ActionController
     }
 
     /**
-     * @param \Sandstorm\NeosAcl\Domain\Model\DynamicRole $dynamicRole
-     * @return void
-     */
-    public function showAction(DynamicRole $dynamicRole)
-    {
-        $this->view->assign('dynamicRole', $dynamicRole);
-    }
-
-    /**
      * @return void
      */
     public function newAction()
     {
         $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
+        $templateDynamicRole = new DynamicRole();
+        $templateDynamicRole->setAbstract(false);
+        $templateDynamicRole->setParentRoleNames(['Neos.Neos:RestrictedEditor', 'Neos.Neos:LivePublisher']);
+        $templateDynamicRole->setPrivilege(DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE);
+        $this->view->assign('dynamicRole', $templateDynamicRole);
+
+        $this->assignAvailableRoles();
+
     }
 
     public function initializeCreateAction() {
@@ -63,6 +77,7 @@ class DynamicRoleController extends ActionController
     public function createAction(DynamicRole $newDynamicRole)
     {
         $this->dynamicRoleRepository->add($newDynamicRole);
+        $this->flushContentCache();
         $this->addFlashMessage('Created a new dynamic role.');
         $this->redirect('index');
     }
@@ -75,6 +90,7 @@ class DynamicRoleController extends ActionController
     {
         $this->view->assign('dynamicRole', $dynamicRole);
         $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
+        $this->assignAvailableRoles();
     }
 
     public function initializeUpdateAction() {
@@ -89,6 +105,7 @@ class DynamicRoleController extends ActionController
     public function updateAction(DynamicRole $dynamicRole)
     {
         $this->dynamicRoleRepository->update($dynamicRole);
+        $this->flushContentCache();
         $this->addFlashMessage('Updated the dynamic role.');
         $this->redirect('index');
     }
@@ -97,10 +114,28 @@ class DynamicRoleController extends ActionController
      * @param \Sandstorm\NeosAcl\Domain\Model\DynamicRole $dynamicRole
      * @return void
      */
-    public function deleteAction(DynamicRole $dynamicRole)
+    public function removeAction(DynamicRole $dynamicRole)
     {
         $this->dynamicRoleRepository->remove($dynamicRole);
+        $this->flushContentCache();
         $this->addFlashMessage('Deleted a dynamic role.');
         $this->redirect('index');
+    }
+
+    /**
+     * On all write actions, we need to flush the content cache. Otherwise, it might happen that the content cache for
+     * the user's workspace still contains ContentEditable markers, but access has been removed in the meantime. This
+     * would lead to an exception when the user starts to type; and we want to prevent this.
+     */
+    protected function flushContentCache()
+    {
+        $this->contentCache->flush();
+    }
+
+    protected function assignAvailableRoles()
+    {
+        $this->view->assign('availableRoles', array_filter($this->policyService->getRoles(), function(Role $role) {
+            return $role->getIdentifier() !== 'Neos.Neos:Editor' && $role->getIdentifier() !== 'Neos.Neos:Administrator' && $role->getIdentifier() !== 'Neos.Neos:SetupUser';
+        }));
     }
 }

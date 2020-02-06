@@ -24,3 +24,8 @@
 .slimNodeTree *[role="button"]:hover .filterIconButton {
     display: inline;
 }
+
+.checkbox--someParentNodeIsSelected svg {
+    color: #00ADEE;
+    opacity: 1;
+}

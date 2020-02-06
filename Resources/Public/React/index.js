@@ -79626,14 +79626,22 @@ var _index = _interopRequireDefault(require("@neos-project/react-ui-components/l
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = _react.default.memo(function WorkspaceSelector(props) {
-  return _react.default.createElement("div", null, _react.default.createElement("h2", null, "Workspace Restriction"), _react.default.createElement(_index.default, {
+  return _react.default.createElement("div", {
+    className: "neos-control-group"
+  }, _react.default.createElement("label", {
+    className: "neos-control-label"
+  }, "... in workspace"), _react.default.createElement("div", {
+    className: "neos-controls neos-controls-row"
+  }, _react.default.createElement(_index.default, {
     options: props.workspaces,
     optionValueField: "name",
     onValuesChange: props.onSelectedWorkspacesChanged,
     searchOptions: props.workspaces,
     values: props.selectedWorkspaces,
-    placeholder: "Restrict to a single workspace"
-  }));
+    placeholder: "Restrict to workspaces"
+  })), _react.default.createElement("div", {
+    className: "neos-help-block"
+  }, "Leave blank to match all workspaces."));
 });
 
 exports.default = _default;
@@ -82022,7 +82030,6 @@ function useNodeTree(csrfProtectionToken, siteNode) {
       setNodes(responseJson);
     });
   }, [csrfProtectionToken, siteNode]);
-  console.log("NODES", nodes);
   return nodes;
 }
 },{"react":"../node_modules/react/index.js"}],"../node_modules/lodash/_arrayPush.js":[function(require,module,exports) {
@@ -87343,7 +87350,8 @@ module.exports = {
   "filterIconButton": "_filterIconButton_854a8",
   "nodeTypeFilterContainer": "_nodeTypeFilterContainer_854a8",
   "slimNodeTree": "_slimNodeTree_854a8",
-  "filterIconButton--active": "_filterIconButton--active_854a8"
+  "filterIconButton--active": "_filterIconButton--active_854a8",
+  "checkbox--someParentNodeIsSelected": "_checkbox--someParentNodeIsSelected_854a8"
 };
 },{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/NodeTypeFilter.tsx":[function(require,module,exports) {
 "use strict";
@@ -87444,6 +87452,8 @@ var _state = require("../state");
 
 var _styleModule = _interopRequireDefault(require("./style.module.css"));
 
+var _classnames = _interopRequireDefault(require("classnames"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -87455,6 +87465,8 @@ function isNode(n) {
 }
 
 var SlimNode = _react.default.memo(function (props) {
+  var _a;
+
   var node = props.node,
       dispatch = props.dispatch;
   var childNodes = (0, _react.useMemo)(function () {
@@ -87468,12 +87480,15 @@ var SlimNode = _react.default.memo(function (props) {
   var isChecked = !!selectedNode;
   var whitelistedNodeTypes = selectedNode ? selectedNode.whitelistedNodeTypes : [];
 
-  var _a = (0, _react.useState)(false),
-      isCollapsed = _a[0],
-      setCollapsed = _a[1];
+  var _b = (0, _react.useState)(false),
+      isCollapsed = _b[0],
+      setCollapsed = _b[1];
+
+  var checkBoxClassNames = (0, _classnames.default)((_a = {}, _a[_styleModule.default['checkbox--someParentNodeIsSelected']] = !isChecked && props.parentIsSelected, _a));
 
   var label = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_index2.default, {
-    isChecked: isChecked
+    isChecked: isChecked,
+    className: checkBoxClassNames
   }), " ", node.label, isChecked ? _react.default.createElement(_NodeTypeFilter.default, {
     nodeTypes: props.nodeTypes,
     whitelistedNodeTypes: whitelistedNodeTypes,
@@ -87498,12 +87513,14 @@ var SlimNode = _react.default.memo(function (props) {
     }
   }), isCollapsed || childNodes.length === 0 ? null : _react.default.createElement(_index.default.Node.Contents, null, childNodes.map(function (childNode) {
     return _react.default.createElement(SlimNode, {
+      key: childNode.identifier,
       nodes: props.nodes,
       node: childNode,
       level: props.level + 1,
       nodeTypes: props.nodeTypes,
       dispatch: props.dispatch,
-      selectedNodes: props.selectedNodes
+      selectedNodes: props.selectedNodes,
+      parentIsSelected: props.parentIsSelected || isChecked
     });
   })));
 });
@@ -87519,7 +87536,13 @@ var _default = _react.default.memo(function SlimNodeTree(props) {
     return _react.default.createElement("div", null, "Loading...");
   }
 
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_index.default, {
+  return _react.default.createElement("div", {
+    className: "neos-control-group"
+  }, _react.default.createElement("label", {
+    className: "neos-control-label"
+  }, "... in document tree"), _react.default.createElement("div", {
+    className: "neos-controls neos-controls-row"
+  }, _react.default.createElement(_index.default, {
     className: _styleModule.default.slimNodeTree
   }, _react.default.createElement(SlimNode, {
     nodes: props.nodes,
@@ -87527,12 +87550,13 @@ var _default = _react.default.memo(function SlimNodeTree(props) {
     level: 1,
     nodeTypes: props.nodeTypes,
     dispatch: props.dispatch,
-    selectedNodes: props.selectedNodes
-  })));
+    selectedNodes: props.selectedNodes,
+    parentIsSelected: false
+  }))));
 });
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/Tree/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Tree/index.js","@neos-project/react-ui-components/lib-esm/Checkbox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/index.js","./NodeTypeFilter":"components/NodeTypeFilter.tsx","../state":"state/index.ts","./style.module.css":"components/style.module.css"}],"components/DimensionPresetSelector.tsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@neos-project/react-ui-components/lib-esm/Tree/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Tree/index.js","@neos-project/react-ui-components/lib-esm/Checkbox/index":"../node_modules/@neos-project/react-ui-components/lib-esm/Checkbox/index.js","./NodeTypeFilter":"components/NodeTypeFilter.tsx","../state":"state/index.ts","./style.module.css":"components/style.module.css","classnames":"../node_modules/classnames/index.js"}],"components/DimensionPresetSelector.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -87574,14 +87598,22 @@ var _default = _react.default.memo(function DimensionPresetSelector(props) {
       });
     });
   }, [props.dimensionPresets]);
-  return _react.default.createElement("div", null, _react.default.createElement("h2", null, "DimensionPreset Restriction"), _react.default.createElement(_index.default, {
+  return _react.default.createElement("div", {
+    className: "neos-control-group"
+  }, _react.default.createElement("label", {
+    className: "neos-control-label"
+  }, "... in dimension"), _react.default.createElement("div", {
+    className: "neos-controls neos-controls-row"
+  }, _react.default.createElement(_index.default, {
     options: preparedOptions,
     optionValueField: "contentDimensionAndPreset",
     onValuesChange: props.onSelectedDimensionPresetsChanged,
     searchOptions: preparedOptions,
     values: props.selectedDimensionPresets,
-    placeholder: "Restrict to a single dimensionPreset"
-  }));
+    placeholder: "Restrict to dimensions"
+  })), _react.default.createElement("div", {
+    className: "neos-help-block"
+  }, "Leave blank to match all dimensions."));
 });
 
 exports.default = _default;
@@ -87677,7 +87709,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _fontawesomeSvgCore.config.familyPrefix = 'fa';
 _fontawesomeSvgCore.config.replacementClass = 'svg-inline--fa';
 Array.prototype.forEach.call(document.querySelectorAll(".dynamic-editor"), function (element) {
-  var _a, _b;
+  var _a, _b, _c, _d;
 
   var props = JSON.parse(element.getAttribute('data-props') || '{}');
   props.name = (_a = element.querySelector('input[type=hidden]')) === null || _a === void 0 ? void 0 : _a.getAttribute('name');
@@ -87685,6 +87717,12 @@ Array.prototype.forEach.call(document.querySelectorAll(".dynamic-editor"), funct
 
   if (value) {
     props.initialState = JSON.parse(value);
+
+    if (((_c = props.initialState) === null || _c === void 0 ? void 0 : _c.length) === 0) {
+      props.initialState = null;
+    } else if (!props.initialState.selectedNodes || ((_d = props.initialState.selectedNodes) === null || _d === void 0 ? void 0 : _d.length) === 0) {
+      props.initialState.selectedNodes = {};
+    }
   }
 
   _reactDom.default.render(_react.default.createElement("div", {

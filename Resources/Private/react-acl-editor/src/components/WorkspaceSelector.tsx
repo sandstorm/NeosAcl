@@ -17,16 +17,21 @@ type WorkspaceSelectorProps = {
 
 export default React.memo(function WorkspaceSelector(props: WorkspaceSelectorProps) {
     return (
-        <div>
-            <h2>Workspace Restriction</h2>
-            <MultiSelectBox
-                options={props.workspaces}
-                optionValueField="name"
-                onValuesChange={props.onSelectedWorkspacesChanged}
-                searchOptions={props.workspaces}
-                values={props.selectedWorkspaces}
-                placeholder="Restrict to a single workspace"
-            />
+        <div className="neos-control-group">
+            <label className="neos-control-label">... in workspace</label>
+            <div className="neos-controls neos-controls-row">
+                <MultiSelectBox
+                    options={props.workspaces}
+                    optionValueField="name"
+                    onValuesChange={props.onSelectedWorkspacesChanged}
+                    searchOptions={props.workspaces}
+                    values={props.selectedWorkspaces}
+                    placeholder="Restrict to workspaces"
+                />
+            </div>
+            <div className="neos-help-block">
+                Leave blank to match all workspaces.
+            </div>
         </div>
     );
 });

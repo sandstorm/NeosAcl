@@ -1,45 +1,12 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+<f:layout name="BackendSubModule" />
 
-<f:layout name="Default" />
+<f:section name="subtitle">
+    <h2>New dynamic role</h2>
+</f:section>
 
-<f:section name="Title">New dynamic role</f:section>
-
-<f:section name="Content">
-    <p>Just fill out the following form to create a new dynamic role:</p>
-
-    <f:form action="create" objectName="newDynamicRole">
-        <ol>
-            <li>
-                <label for="name">Name</label>
-                <f:form.textfield property="name" id="name" />
-            </li>
-
-            <li>
-                <label for="abstract">Abstract</label>
-                <f:form.textfield property="abstract" id="abstract" />
-            </li>
-
-            <li>
-                <label for="parentRoleNames">Parent role names</label>
-                <f:form.textfield property="parentRoleNames" id="parentRoleNames" />
-            </li>
-
-            <li>
-                <label for="privilege">Privilege</label>
-                <div id="privilege">
-                    <f:form.hidden property="privilege" />
-                </div>
-            </li>
-
-            <li>
-                <label for="matcher">Matcher</label>
-                <div id="matcher" class="dynamic-editor" data-props="{dynamicEditorProps}">
-                    <f:form.hidden property="matcher" />
-                </div>
-            </li>
-
-            <li>
-                <f:form.submit value="Create" />
-            </li>
-        </ol>
+<f:section name="content">
+    <f:form action="create" name="newDynamicRole" object="{dynamicRole}">
+        <f:render partial="Module/DynamicRoleForm" arguments="{dynamicRole: dynamicRole, dynamicEditorProps: dynamicEditorProps, availableRoles: availableRoles, saveText: 'Create'}" />
     </f:form>
 </f:section>

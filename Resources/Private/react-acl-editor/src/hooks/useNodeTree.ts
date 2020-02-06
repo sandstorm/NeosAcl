@@ -22,7 +22,5 @@ export function useNodeTree(csrfProtectionToken: string, siteNode: string) {
         [csrfProtectionToken, siteNode]
     );
 
-console.log("NODES", nodes);
-
     return nodes;
 }

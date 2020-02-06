@@ -1,4 +1,5 @@
 <?php
+
 namespace Sandstorm\NeosAcl\Domain\Model;
 
 /*
@@ -7,6 +8,7 @@ namespace Sandstorm\NeosAcl\Domain\Model;
 
 use Neos\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
+use Sandstorm\NeosAcl\Domain\Dto\MatcherConfiguration;
 
 /**
  * @Flow\Entity
@@ -125,5 +127,22 @@ class DynamicRole
         $this->privilege = $privilege;
     }
 
+
+    public function getPrivilegeExplanation(): string
+    {
+        switch ($this->privilege) {
+            case self::PRIVILEGE_VIEW:
+                return 'view';
+            case self::PRIVILEGE_VIEW_EDIT:
+                return 'view, edit';
+            case self::PRIVILEGE_VIEW_EDIT_CREATE_DELETE:
+                return 'view, edit, create, delete';
+        }
+    }
+
+    public function getMatcherExplanationParts(): array
+    {
+        return MatcherConfiguration::fromJson($this->matcher)->renderExplanationParts();
+    }
 
 }

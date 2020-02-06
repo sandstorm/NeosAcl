@@ -1,25 +1,75 @@
-<f:layout name="Default" />
+{namespace neos=Neos\Neos\ViewHelpers}
+<f:layout name="BackendSubModule" />
 
-<f:section name="Title">A list of dynamic roles</f:section>
 
-<f:section name="Content">
-    <f:if condition="{dynamicRoles}">
-        <f:then>
-            <ul>
-                <f:for each="{dynamicRoles}" as="dynamicRole">
-                    <li>
-                        <f:link.action action="show" arguments="{dynamicRole: dynamicRole}">{dynamicRole.name}</f:link.action>
-                        <f:link.action action="edit" arguments="{dynamicRole: dynamicRole}">Edit</f:link.action>
-                        <f:form action="delete" arguments="{dynamicRole: dynamicRole}">
-                            <f:form.submit value="Delete" />
-                        </f:form>
-                    </li>
-                </f:for>
-            </ul>
-        </f:then>
-        <f:else>
-            <p>No dynamic roles created yet.</p>
-        </f:else>
-    </f:if>
-    <p><f:link.action action="new">Create a new dynamic role</f:link.action></p>
+
+<f:section name="content">
+    <table class="neos-table">
+        <thead>
+        <tr>
+            <th>Role Name</th>
+            <th>Parent Roles</th>
+            <th>Privilege</th>
+            <th>Summary</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            <f:for each="{dynamicRoles}" as="dynamicRole">
+                <tr>
+                    <td>
+                        {dynamicRole.name}
+                    </td>
+                    <td>
+                        <f:for each="{dynamicRole.parentRoleNames}" as="parentRole">
+                            <span class="neos-label">{parentRole}</span>
+                        </f:for>
+                    </td>
+                    <td>
+                        {dynamicRole.privilegeExplanation}
+                    </td>
+                    <td>
+                        <f:for each="{dynamicRole.matcherExplanationParts}" as="explanationPart">
+                            <span class="neos-label" title="{explanationPart.details}">{explanationPart.title}</span>
+                        </f:for>
+                    </td>
+                    <td class="neos-action">
+                        <div class="neos-pull-right">
+                            <f:link.action action="edit" arguments="{dynamicRole: dynamicRole}" class="neos-button neos-button-primary" title="{neos:backend.translate(id: 'clickToEdit', value: 'Click to edit')}" additionalAttributes="{data-neos-toggle: 'tooltip'}">
+                                <i class="fas fa-pencil-alt icon-white"></i>
+                            </f:link.action>
+
+                            <button class="neos-button neos-button-danger" title="{neos:backend.translate(id: 'clickToDelete', value: 'Click to delete')}" data-toggle="modal" href="#{dynamicRole.name}" data-neos-toggle="tooltip">
+                                <i class="fas fa-trash-alt icon-white"></i>
+                            </button>
+                            <div class="neos-hide" id="{dynamicRole.name}">
+                                <div class="neos-modal-centered">
+                                    <div class="neos-modal-content">
+                                        <div class="neos-modal-header">
+                                            <button type="button" class="neos-close neos-button" data-dismiss="modal"></button>
+                                            <div class="neos-header">Do you really want to delete "{dynamicRole.name}"? This action cannot be undone.</div>
+                                        </div>
+                                        <div class="neos-modal-footer">
+                                            <a href="#" class="neos-button" data-dismiss="modal">{neos:backend.translate(id: 'cancel', value: 'Cancel')}</a>
+                                            <f:form action="remove" arguments="{dynamicRole: dynamicRole}" class="neos-inline">
+                                                <button class="neos-button neos-button-danger" title="Delete this dynamic role">
+                                                    Yes, delete this dynamic role
+                                                </button>
+                                            </f:form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="neos-modal-backdrop neos-in"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </f:for>
+        </tbody>
+    </table>
+
+    <div class="neos-footer">
+        <f:link.action action="new" class="neos-button neos-button-primary" title="{neos:backend.translate(id: 'clickToCreate', value: 'Click to create new')}">Add new dynamic role</f:link.action>
+    </div>
 </f:section>
+

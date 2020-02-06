@@ -1,42 +1,12 @@
-<f:layout name="Default" />
+{namespace neos=Neos\Neos\ViewHelpers}
+<f:layout name="BackendSubModule" />
 
-<f:section name="Title">Edit dynamic role "{dynamicRole.name}"</f:section>
+<f:section name="subtitle">
+    <h2>Edit dynamic role "{dynamicRole.name}"</h2>
+</f:section>
 
-<f:section name="Content">
-    <f:form action="update" object="{dynamicRole}" objectName="dynamicRole">
-        <ol>
-            <li>
-                <label for="name">Name</label>
-                <f:form.textfield property="name" id="name" />
-            </li>
-
-            <li>
-                <label for="abstract">Abstract</label>
-                <f:form.textfield property="abstract" id="abstract" />
-            </li>
-
-            <li>
-                <label for="parentRoleNames">Parent role names</label>
-                <f:form.textfield property="parentRoleNames" id="parentRoleNames"  value="{dynamicRole.parentRoleNames -> f:format.json()}" />
-            </li>
-
-            <li>
-                <label for="privileges">Privileges</label>
-                <f:form.radio id="privileges" property="privilege" value="view" /> View<br />
-                <f:form.radio property="privilege" value="view_edit" /> View, Edit<br />
-                <f:form.radio property="privilege" value="view_edit_create_delete" /> View, Edit, Create, Delete<br />
-            </li>
-
-            <li>
-                <label for="matcher">Matcher</label>
-                <div id="matcher" class="dynamic-editor" data-props="{dynamicEditorProps}">
-                    <f:form.hidden property="matcher" value="{dynamicRole.matcher -> f:format.json()}" />
-                </div>
-            </li>
-
-            <li>
-                <f:form.submit value="Update" />
-            </li>
-        </ol>
+<f:section name="content">
+    <f:form action="update" name="dynamicRole" object="{dynamicRole}">
+        <f:render partial="Module/DynamicRoleForm" arguments="{dynamicRole: dynamicRole, dynamicEditorProps: dynamicEditorProps, availableRoles: availableRoles, saveText: 'Edit {dynamicRole.name}'}" />
     </f:form>
 </f:section>

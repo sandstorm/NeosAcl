@@ -17,6 +17,11 @@ Array.prototype.forEach.call(document.querySelectorAll(".dynamic-editor"), (elem
     const value = element.querySelector('input[type=hidden]')?.getAttribute('value');
     if (value) {
         props.initialState = JSON.parse(value);
+        if (props.initialState?.length === 0) {
+            props.initialState = null;
+        } else if (!props.initialState.selectedNodes || props.initialState.selectedNodes?.length === 0) {
+            props.initialState.selectedNodes = {};
+        }
     }
 
     ReactDOM.render(<div className={style.wrapper}>

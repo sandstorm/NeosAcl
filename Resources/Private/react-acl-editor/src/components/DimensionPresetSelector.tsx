@@ -27,16 +27,21 @@ export default React.memo(function DimensionPresetSelector(props: DimensionPrese
     );
 
     return (
-        <div>
-            <h2>DimensionPreset Restriction</h2>
-            <MultiSelectBox
-                options={preparedOptions}
-                optionValueField="contentDimensionAndPreset"
-                onValuesChange={props.onSelectedDimensionPresetsChanged}
-                searchOptions={preparedOptions}
-                values={props.selectedDimensionPresets}
-                placeholder="Restrict to a single dimensionPreset"
-            />
+        <div className="neos-control-group">
+            <label className="neos-control-label">... in dimension</label>
+            <div className="neos-controls neos-controls-row">
+                <MultiSelectBox
+                    options={preparedOptions}
+                    optionValueField="contentDimensionAndPreset"
+                    onValuesChange={props.onSelectedDimensionPresetsChanged}
+                    searchOptions={preparedOptions}
+                    values={props.selectedDimensionPresets}
+                    placeholder="Restrict to dimensions"
+                />
+            </div>
+            <div className="neos-help-block">
+                Leave blank to match all dimensions.
+            </div>
         </div>
     );
 });

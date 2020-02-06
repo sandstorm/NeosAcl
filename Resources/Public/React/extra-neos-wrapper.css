@@ -896,3 +896,6 @@
     display: inline; }
   .neos ._slimNodeTree_854a8 *[role="button"]:hover ._filterIconButton_854a8 {
     display: inline; }
+  .neos ._checkbox--someParentNodeIsSelected_854a8 svg {
+    color: #00ADEE;
+    opacity: 1; }
