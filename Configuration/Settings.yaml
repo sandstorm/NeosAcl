@@ -3,16 +3,16 @@ Neos:
     modules:
       administration:
         submodules:
-          acl:
-            label: 'ACL Inspector'
-            controller: 'Sandstorm\NeosAcl\Controller\Module\ACLInspectorController'
-            description: 'Module to check the acl'
-            icon: 'icon-lock'
-            actions:
-              index:
-                label: 'ACL Inspector'
-                title: 'ACL Inspector'
-            privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.ACLInspector'
+          #acl:
+          #  label: 'ACL Inspector'
+          #  controller: 'Sandstorm\NeosAcl\Controller\Module\ACLInspectorController'
+          #  description: 'Module to check the acl'
+          #  icon: 'icon-lock'
+          #  actions:
+          #    index:
+          #      label: 'ACL Inspector'
+          #      title: 'ACL Inspector'
+          #  privilegeTarget: 'Sandstorm.NeosAcl:Backend.Module.ACLInspector'
           dynamicRoles:
             label: 'Dynamic Roles'
             controller: 'Sandstorm\NeosAcl\Controller\Module\DynamicRoleController'
@@ -26,5 +26,5 @@ Neos:
 
 Sandstorm:
   NeosAcl:
-    reactDevelopmentMode: true
+    reactDevelopmentMode: false
     reactDevelopmentServerIpAndPort: 127.0.0.1:3000

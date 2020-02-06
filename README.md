@@ -1,12 +1,22 @@
 # Sandstorm Neos ACL
 
-THIS IS NO WORKING CODE YET, BUT SHARED HERE FOR DEV PURPOSES SO FAR.
+This package implements dynamic Access Control Lists for Neos Roles.
+
+The development of this package was sponsored by [ujamii](https://www.ujamii.com/) and [queo](https://www.queo.de). 
+
+Main features:
+
+- Switch `RestrictedEditor` to a whitelist-only permission approach. By installing this package, the `RestrictedEditor` is
+  not allowed anymore to change any content.
+- Configure dynamic roles through a Neos backend module.
+- Permissions on the node tree, workspaces and dimensions possible.
+- Permissions work predictably with sane defaults and purely-additive logic.
 
 ## Development 
 
 **Initial (Package) Setup**
 
-- clone this package as "Sandstorm.NeosAcl" in the DistributionPackages of a Neos 4.2 or later installation
+- clone this package as "Sandstorm.NeosAcl" in the DistributionPackages of a Neos 4.3 or later installation
 - add it to `composer.json` as `"sandstorm/neosacl": "*"`
 - run `composer update`
  
@@ -17,29 +27,12 @@ cd Resources/Private/react-acl-editor
 yarn dev
 ```
 
-**You need to START THE REACT DEVELOPMENT SERVER at every time you are developing the application** (using `yarn start`).
-
 Then, log into the backend of Neos, and visit the module "Dynamic Roles".
 
-### TODO list
 
-- [ ] build dynamic ACL Privilege Matcher editor
-    - [ ] remove hard-coded node types in PermissionWidget and pass them in via JSON (in index.tsx) from the enclosing site
-    - [ ] allow to select a Node
-        - [ ] build backend endpoint for node search (based on NodeSearchService)
-        - [ ] use this endpoint in the component
-    - [ ] send the generated Privilege Matchers as JSON as part of the outer form
-    - [ ] initialize the Privilege Matchers in React from the outer form (in index.tsx)
-    - [ ] fix React CSS styling to work with Neos Backend
-    - [ ] include the statically-built JS files in production mode
-- [ ] fully implement DynamicRoleGeneratorService
-- [ ] visualize DENY in Permission Browser
-- [ ] add proper README with usage instructions
+### Internal Implementation Details
 
-
-## Internal Implementation Details
-
-### Implementing Dynamic Node Privileges and MethodPrivileges
+#### Implementing Dynamic Node Privileges and MethodPrivileges
 
 The basic idea was the following: Hook into `PolicyService::emitConfigurationLoaded`, and modify the `$configuration` array (introduce new roles
 and privilegeTargets). This basically works **at runtime** - however there is a problem with dynamic MethodPrivilege enforcement, which is
@@ -86,4 +79,4 @@ the dynamically-added roles.
 
 #### Implementation
 
-   
+The post-processing of the `methodPermissions` is done using a custom cache frontend (`SecurityAuthorizationPrivilegeMethodCacheFrontend`).
