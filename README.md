@@ -28,6 +28,7 @@ Main features:
 
 ```
 cd Resources/Private/react-acl-editor
+yarn
 yarn dev
 ```
 

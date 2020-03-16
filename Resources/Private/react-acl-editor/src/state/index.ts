@@ -5,7 +5,7 @@ import produce from "immer";
  */
 export interface State {
     readonly selectedWorkspaces: string[];
-    readonly dimensionPresets: string[];
+    readonly selectedDimensionPresets: SelectedDimensionPreset[];
     readonly selectedNodes: SelectedNodes;
 }
 
@@ -17,10 +17,14 @@ type SelectedNodeState = {
     whitelistedNodeTypes: string[]
 };
 
+export type SelectedDimensionPreset = {
+    dimensionName: string;
+    presetName: string;
+}
 
 export const initialState: State = {
     selectedWorkspaces: [],
-    dimensionPresets: [],
+    selectedDimensionPresets: [],
     selectedNodes: {}
 };
 
@@ -41,13 +45,13 @@ export function setSelectedWorkspaces(workspaceNames: string[]): SetSelectedWork
 
 type SetDimensionPresets = {
     type: "setDimensionPresets",
-    dimensionPresets: string[]
+    selectedDimensionPresets: SelectedDimensionPreset[]
 }
 
-export function setDimensionPresets(dimensionPresets: string[]): SetDimensionPresets {
+export function setDimensionPresets(selectedDimensionPresets: SelectedDimensionPreset[]): SetDimensionPresets {
     return {
         type: 'setDimensionPresets',
-        dimensionPresets
+        selectedDimensionPresets
     };
 }
 
@@ -93,7 +97,7 @@ export function reducer(state: State, action: Action): State {
             });
         case 'setDimensionPresets':
             return produce(state, draftState => {
-                draftState.dimensionPresets = action.dimensionPresets;
+                draftState.selectedDimensionPresets = action.selectedDimensionPresets;
             });
         case 'toggleNodeSelection':
             return produce(state, draftState => {

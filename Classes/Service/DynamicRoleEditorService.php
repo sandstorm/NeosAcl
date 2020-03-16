@@ -131,7 +131,8 @@ class DynamicRoleEditorService
         foreach ($this->contentDimensionPresetSource->getAllPresets() as $dimensionName => $dimensionConfig) {
             foreach ($dimensionConfig['presets'] as $presetName => $presetConfig) {
                 $result[] = [
-                    'contentDimensionAndPreset' => $dimensionName . '|||' . $presetName,
+                    'dimensionName' => $dimensionName,
+                    'presetName' => $presetName,
                     'dimensionLabel' => $dimensionConfig['label'],
                     'presetLabel' => $presetConfig['label'],
                 ];

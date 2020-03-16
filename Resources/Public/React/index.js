@@ -81915,7 +81915,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var initialState = {
   selectedWorkspaces: [],
-  dimensionPresets: [],
+  selectedDimensionPresets: [],
   selectedNodes: {}
 };
 exports.initialState = initialState;
@@ -81927,10 +81927,10 @@ function setSelectedWorkspaces(workspaceNames) {
   };
 }
 
-function setDimensionPresets(dimensionPresets) {
+function setDimensionPresets(selectedDimensionPresets) {
   return {
     type: 'setDimensionPresets',
-    dimensionPresets: dimensionPresets
+    selectedDimensionPresets: selectedDimensionPresets
   };
 }
 
@@ -81962,7 +81962,7 @@ function reducer(state, action) {
 
     case 'setDimensionPresets':
       return (0, _immer.default)(state, function (draftState) {
-        draftState.dimensionPresets = action.dimensionPresets;
+        draftState.selectedDimensionPresets = action.selectedDimensionPresets;
       });
 
     case 'toggleNodeSelection':
@@ -87643,30 +87643,33 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-var __assign = void 0 && (void 0).__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
+var combineDimensionAndPresetName = function combineDimensionAndPresetName(dimensionName, presetName) {
+  return dimensionName + "|||" + presetName;
 };
 
 var _default = _react.default.memo(function DimensionPresetSelector(props) {
   var preparedOptions = (0, _react.useMemo)(function () {
     return props.dimensionPresets.map(function (dimensionPreset) {
-      return __assign(__assign({}, dimensionPreset), {
+      return {
+        combinedDimensionAndPresetName: combineDimensionAndPresetName(dimensionPreset.dimensionName, dimensionPreset.presetName),
         label: dimensionPreset.dimensionLabel + ": " + dimensionPreset.presetLabel
-      });
+      };
     });
   }, [props.dimensionPresets]);
+  var preparedSelectedDimensionPresets = props.selectedDimensionPresets.map(function (selected) {
+    return combineDimensionAndPresetName(selected.dimensionName, selected.presetName);
+  });
+
+  var onSelectedDimensionPresetsChanged = function onSelectedDimensionPresetsChanged(newValues) {
+    return props.onSelectedDimensionPresetsChanged(newValues.map(function (newValue) {
+      var values = newValue.split("|||");
+      return {
+        dimensionName: values[0],
+        presetName: values[1]
+      };
+    }));
+  };
+
   return _react.default.createElement("div", {
     className: "neos-control-group"
   }, _react.default.createElement("label", {
@@ -87675,10 +87678,10 @@ var _default = _react.default.memo(function DimensionPresetSelector(props) {
     className: "neos-controls neos-controls-row"
   }, _react.default.createElement(_index.default, {
     options: preparedOptions,
-    optionValueField: "contentDimensionAndPreset",
-    onValuesChange: props.onSelectedDimensionPresetsChanged,
+    optionValueField: "combinedDimensionAndPresetName",
+    onValuesChange: onSelectedDimensionPresetsChanged,
     searchOptions: preparedOptions,
-    values: props.selectedDimensionPresets,
+    values: preparedSelectedDimensionPresets,
     placeholder: "Restrict to dimensions"
   })), _react.default.createElement("div", {
     className: "neos-help-block"
@@ -87739,7 +87742,7 @@ function PermissionWidget(props) {
     }
   }), _react.default.createElement(_DimensionPresetSelector.default, {
     dimensionPresets: props.dimensions,
-    selectedDimensionPresets: state.dimensionPresets,
+    selectedDimensionPresets: state.selectedDimensionPresets,
     onSelectedDimensionPresetsChanged: function onSelectedDimensionPresetsChanged(dimensionPresets) {
       return dispatch((0, _index.setDimensionPresets)(dimensionPresets));
     }

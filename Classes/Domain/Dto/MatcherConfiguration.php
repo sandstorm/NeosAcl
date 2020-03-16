@@ -35,7 +35,7 @@ class MatcherConfiguration
     /**
      * @var array
      */
-    protected $dimensionPresets;
+    protected $selectedDimensionPresets;
 
     /**
      * @var MatcherConfigurationSelectedNode[]
@@ -45,27 +45,32 @@ class MatcherConfiguration
     /**
      * MatcherConfiguration constructor.
      * @param array $selectedWorkspaces
-     * @param array $dimensionPresets
+     * @param MatcherConfigurationSelectedDimensionPreset[] $selectedDimensionPresets
      * @param MatcherConfigurationSelectedNode[] $selectedNodes
      */
-    public function __construct(array $selectedWorkspaces, array $dimensionPresets, array $selectedNodes)
+    public function __construct(array $selectedWorkspaces, array $selectedDimensionPresets, array $selectedNodes)
     {
         $this->selectedWorkspaces = $selectedWorkspaces;
-        $this->dimensionPresets = $dimensionPresets;
+        $this->selectedDimensionPresets = $selectedDimensionPresets;
         $this->selectedNodes = $selectedNodes;
     }
 
     public static function fromJson(array $json): self
     {
         $selectedNodes = [];
-
         foreach ($json['selectedNodes'] as $nodeIdentifier => $config) {
             $selectedNodes[] = MatcherConfigurationSelectedNode::fromConfig($nodeIdentifier, $config);
         }
 
+        $selectedDimensionPresets = [];
+        foreach ($json['selectedDimensionPresets']as $config) {
+            $selectedDimensionPresets[] = MatcherConfigurationSelectedDimensionPreset::fromConfig($config);
+        }
+
+
         return new self(
             array_values($json['selectedWorkspaces']),
-            array_values($json['dimensionPresets']),
+            $selectedDimensionPresets,
             $selectedNodes
         );
     }
@@ -75,8 +80,7 @@ class MatcherConfiguration
         $matcherParts = [];
 
         $matcherParts[] = self::generatePolicyMatcherStringForSelectedWorkspaces($this->selectedWorkspaces);
-        // TODO: dimension preset
-        //$matcherParts[] = self::generatePolicyMatcherStringForSelectedWorkspaces($this->selectedWorkspaces);
+        $matcherParts[] = self::generatePolicyMatcherStringForSelectedDimensions($this->selectedDimensionPresets);
         $matcherParts[] = self::generatePolicyMatcherStringForSelectedNodes($this->selectedNodes);
 
         return implode(' && ', $matcherParts);
@@ -95,6 +99,21 @@ class MatcherConfiguration
         return '(' . implode(' || ', $matcherParts) . ')';
     }
 
+    private static function generatePolicyMatcherStringForSelectedDimensions(array $dimensionPresets)
+    {
+        $matcherParts = [];
+
+        foreach ($dimensionPresets as $dimensionPreset) {
+            /* @var $dimensionPreset MatcherConfigurationSelectedDimensionPreset */
+            $matcherParts[] = $dimensionPreset->toPolicyMatcherString();
+        }
+
+        if (empty($matcherParts)) {
+            return 'true';
+        }
+
+        return '(' . implode(' || ', $matcherParts) . ')';
+    }
 
     private static function generatePolicyMatcherStringForSelectedNodes(array $selectedNodesConfig)
     {
@@ -123,17 +142,17 @@ class MatcherConfiguration
             ];
         }
 
-        if (count($this->dimensionPresets)) {
+        if (count($this->selectedDimensionPresets)) {
             $explanation[] = [
                 'title' => 'Dimensions',
-                'details' => implode(', ', $this->dimensionPresets)
+                'details' => implode(', ', $this->selectedDimensionPresets)
             ];
         }
 
         if (count($this->selectedNodes)) {
             $explanation[] = [
                 'title' => count($this->selectedNodes) . ' Nodes',
-                'details' => implode(', ', array_map(function(MatcherConfigurationSelectedNode $nodeConfig) {
+                'details' => implode(', ', array_map(function (MatcherConfigurationSelectedNode $nodeConfig) {
                     return $nodeConfig->getNodeIdentifier();
                 }, $this->selectedNodes))
             ];
@@ -145,7 +164,8 @@ class MatcherConfiguration
     /**
      * @return string[]
      */
-    public function getSelectedNodeIdentifiers(): array {
+    public function getSelectedNodeIdentifiers(): array
+    {
         $nodeIdentifiers = [];
         foreach ($this->selectedNodes as $selectedNode) {
             $nodeIdentifiers[] = $selectedNode->getNodeIdentifier();

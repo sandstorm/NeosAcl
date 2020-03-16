@@ -48,7 +48,7 @@ function PermissionWidget(props: PermissionWidgetProps) {
 
             <DimensionPresetSelector
                 dimensionPresets={props.dimensions}
-                selectedDimensionPresets={state.dimensionPresets}
+                selectedDimensionPresets={state.selectedDimensionPresets}
                 onSelectedDimensionPresetsChanged={(dimensionPresets) =>
                     dispatch(setDimensionPresets(dimensionPresets))
                 }
