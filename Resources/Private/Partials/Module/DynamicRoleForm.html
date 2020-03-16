@@ -4,7 +4,7 @@
         <fieldset>
             <legend>Basic Configuration</legend>
 
-            <div class="neos-control-group{f:validation.ifHasErrors(for: 'name', then: ' neos-error')}">
+            <div class="neos-control-group{f:validation.ifHasErrors(for: 'dynamicRole.name', then: ' neos-error')}">
                 <label class="neos-control-label" for="name">Name of role</label>
                 <div class="neos-controls neos-controls-row">
                     <f:form.textfield property="name" id="name" class="neos-span6"/>
@@ -19,7 +19,7 @@
         <fieldset>
             <legend>Role Details</legend>
 
-            <div class="neos-control-group{f:validation.ifHasErrors(for: 'abstract', then: ' neos-error')}">
+            <div class="neos-control-group{f:validation.ifHasErrors(for: 'dynamicRole.abstract', then: ' neos-error')}">
                 <label class="neos-control-label">Role type</label>
                 <div class="neos-controls">
                     <label class="neos-radio neos-inline">
@@ -63,7 +63,7 @@
         <fieldset>
             <legend>Permissions</legend>
 
-            <div class="neos-control-group{f:validation.ifHasErrors(for: 'privilege', then: ' neos-error')}">
+            <div class="neos-control-group{f:validation.ifHasErrors(for: 'dynamicRole.privilege', then: ' neos-error')}">
                 <label class="neos-control-label">Privilege</label>
                 <div class="neos-controls">
                     <label class="neos-radio neos-inline">

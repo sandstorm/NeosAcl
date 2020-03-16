@@ -17,6 +17,7 @@ class DynamicRole
 {
 
     /**
+     * @Flow\Validate(type="RegularExpression", options={"regularExpression"="/^\w+$/"})
      * @var string
      */
     protected $name;
