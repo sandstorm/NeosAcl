@@ -2,28 +2,16 @@ import React, { Component, useEffect, useState, useMemo } from 'react';
 import Tree from '@neos-project/react-ui-components/lib-esm/Tree/index';
 import CheckBox from '@neos-project/react-ui-components/lib-esm/Checkbox/index';
 import NodeTypeFilter from './NodeTypeFilter';
-import { NodeType } from '../types';
+import { Node, NodeChildrenReference, NodeType } from '../types';
 import { SelectedNodes, toggleNodeSelection, updateWhitelistedNodeTypesForNode } from '../state';
 import style from './style.module.css';
 import classnames from 'classnames';
 
-type NodeChildrenReference = {
-    readonly contextPath: string;
-    readonly nodeType: string;
-};
-
-type Node = {
-    readonly contextPath: string;
-    readonly name: string;
-    readonly identifier: string;
-    readonly label: string;
-    readonly nodeType: string;
-    readonly children: NodeChildrenReference[];
-};
-
 type SlimNodeTreeProps = {
     nodeTypes: NodeType[];
     nodes: Node[];
+    loadAdditionalNodes: (parentNodePath: string) => void;
+
     rootNodeContextPath: string;
 
     selectedNodes: SelectedNodes;
@@ -35,6 +23,8 @@ type SlimNodeTreeProps = {
 type SlimNodeProps = {
     nodeTypes: NodeType[];
     nodes: Node[];
+    loadAdditionalNodes: (parentNodePath: string) => void;
+
     node: Node;
     level: number;
 
@@ -47,8 +37,15 @@ function isNode(n: Node | undefined): n is Node {
     return n !== undefined;
 }
 
+const isDocumentNode = (nodeTypes: NodeType[]) => (n: NodeChildrenReference) => {
+    const nodeType = nodeTypes.find(nt => nt.value === n.nodeType);
+
+    return nodeType?.isDocumentNode;
+};
+
+
 const SlimNode = React.memo(function (props: SlimNodeProps) {
-    const { node, dispatch } = props;
+    const { nodeTypes, node, dispatch } = props;
     const childNodes = useMemo(() => {
         return props.node.children
             .map(childReference =>
@@ -61,7 +58,7 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
     const isChecked = !!selectedNode;
     const whitelistedNodeTypes = selectedNode ? selectedNode.whitelistedNodeTypes : [];
 
-    const [isCollapsed, setCollapsed] = useState(false);
+    const [isCollapsed, setCollapsed] = useState(childNodes.length === 0);
 
     const checkBoxClassNames =  classnames({
         [style['checkbox--someParentNodeIsSelected']]: !isChecked && props.parentIsSelected,
@@ -70,9 +67,11 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
     const label = (
         <>
             <CheckBox isChecked={isChecked} className={checkBoxClassNames} /> {node.label}
-            {isChecked ? <NodeTypeFilter nodeTypes={props.nodeTypes} whitelistedNodeTypes={whitelistedNodeTypes} onWhitelistedNodeTypesChanged={(newNodeTypes) => dispatch(updateWhitelistedNodeTypesForNode(node.identifier, newNodeTypes))} /> : null}
+            {isChecked ? <NodeTypeFilter nodeTypes={nodeTypes} whitelistedNodeTypes={whitelistedNodeTypes} onWhitelistedNodeTypesChanged={(newNodeTypes) => dispatch(updateWhitelistedNodeTypesForNode(node.identifier, newNodeTypes))} /> : null}
         </>
     );
+
+    const hasChildren = (props.node.children.filter(isDocumentNode(nodeTypes)).length > 0);
 
     return (
         <Tree.Node>
@@ -84,15 +83,22 @@ const SlimNode = React.memo(function (props: SlimNodeProps) {
                 title={node.nodeType}
                 isCollapsed={isCollapsed}
                 icon="file-o"
-                hasChildren={childNodes.length > 0}
-                onToggle={() => setCollapsed(!isCollapsed)}
+                hasChildren={hasChildren}
+                onToggle={() => {
+                    if (isCollapsed && hasChildren && !childNodes.length) {
+                        // we want to get expanded (are collapsed currently); we have children but they are not yet loaded
+                        // -> now, we want to load children.
+                        props.loadAdditionalNodes(node.contextPath);
+                    }
+                    setCollapsed(!isCollapsed);
+                }}
                 onClick={() => dispatch(toggleNodeSelection(node.identifier))}
             />
             {isCollapsed || childNodes.length === 0 ?
                 null
                 :
                 <Tree.Node.Contents>
-                    {childNodes.map(childNode => <SlimNode key={childNode.identifier} nodes={props.nodes} node={childNode} level={props.level + 1} nodeTypes={props.nodeTypes} dispatch={props.dispatch} selectedNodes={props.selectedNodes} parentIsSelected={props.parentIsSelected || isChecked} />)}
+                    {childNodes.map(childNode => <SlimNode key={childNode.identifier} nodes={props.nodes} loadAdditionalNodes={props.loadAdditionalNodes} node={childNode} level={props.level + 1} nodeTypes={props.nodeTypes} dispatch={props.dispatch} selectedNodes={props.selectedNodes} parentIsSelected={props.parentIsSelected || isChecked} />)}
                 </Tree.Node.Contents>
             }
 
@@ -115,7 +121,7 @@ export default React.memo(function SlimNodeTree(props: SlimNodeTreeProps) {
             <label className="neos-control-label">... in document tree</label>
             <div className="neos-controls neos-controls-row">
                 <Tree className={style.slimNodeTree}>
-                    <SlimNode nodes={props.nodes} node={rootNode} level={1} nodeTypes={props.nodeTypes} dispatch={props.dispatch} selectedNodes={props.selectedNodes} parentIsSelected={false} />
+                    <SlimNode nodes={props.nodes} loadAdditionalNodes={props.loadAdditionalNodes} node={rootNode} level={1} nodeTypes={props.nodeTypes} dispatch={props.dispatch} selectedNodes={props.selectedNodes} parentIsSelected={false} />
                 </Tree>
             </div>
         </div>

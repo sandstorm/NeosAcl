@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @param array $matcher
  * @return string
+ * @Flow\Proxy(false)
  */
 class MatcherConfiguration
 {
@@ -141,4 +142,15 @@ class MatcherConfiguration
         return $explanation;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getSelectedNodeIdentifiers(): array {
+        $nodeIdentifiers = [];
+        foreach ($this->selectedNodes as $selectedNode) {
+            $nodeIdentifiers[] = $selectedNode->getNodeIdentifier();
+        }
+
+        return $nodeIdentifiers;
+    }
 }

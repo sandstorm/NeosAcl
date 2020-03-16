@@ -11,6 +11,7 @@ use Neos\Flow\Property\TypeConverter\ArrayConverter;
 use Neos\Flow\Security\Policy\PolicyService;
 use Neos\Flow\Security\Policy\Role;
 use Neos\Fusion\Core\Cache\ContentCache;
+use Sandstorm\NeosAcl\Domain\Dto\MatcherConfiguration;
 use Sandstorm\NeosAcl\Domain\Model\DynamicRole;
 use Sandstorm\NeosAcl\Service\DynamicRoleEditorService;
 
@@ -54,7 +55,7 @@ class DynamicRoleController extends ActionController
      */
     public function newAction()
     {
-        $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
+        $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request, null));
         $templateDynamicRole = new DynamicRole();
         $templateDynamicRole->setAbstract(false);
         $templateDynamicRole->setParentRoleNames(['Neos.Neos:RestrictedEditor', 'Neos.Neos:LivePublisher']);
@@ -89,7 +90,7 @@ class DynamicRoleController extends ActionController
     public function editAction(DynamicRole $dynamicRole)
     {
         $this->view->assign('dynamicRole', $dynamicRole);
-        $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request));
+        $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request, MatcherConfiguration::fromJson($dynamicRole->getMatcher())));
         $this->assignAvailableRoles();
     }
 

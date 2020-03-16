@@ -16,8 +16,10 @@ import { NodeType } from './types';
 type PermissionWidgetProps = {
     csrfProtectionToken: string,
     siteNode: string,
+    nodeTreeLoadingDepth: number,
     workspaces: Workspace[],
     dimensions: DimensionPreset[],
+    expandedNodes: string[],
     nodeTypes: NodeType[],
 
     /**
@@ -31,8 +33,7 @@ type PermissionWidgetProps = {
 function PermissionWidget(props: PermissionWidgetProps) {
     const [state, dispatch] = useReducer(reducer, props.initialState || initialState);
 
-    const nodes = useNodeTree(props.csrfProtectionToken, props.siteNode)
-
+    const {nodes, loadAdditionalNodes} = useNodeTree(props.csrfProtectionToken, props.siteNode, props.expandedNodes, props.nodeTreeLoadingDepth);
 
     return (
         <>
@@ -52,7 +53,7 @@ function PermissionWidget(props: PermissionWidgetProps) {
                     dispatch(setDimensionPresets(dimensionPresets))
                 }
             />
-            <SlimNodeTree nodes={nodes} rootNodeContextPath={props.siteNode} nodeTypes={props.nodeTypes} dispatch={dispatch} selectedNodes={state.selectedNodes} />
+            <SlimNodeTree nodes={nodes} loadAdditionalNodes={loadAdditionalNodes} rootNodeContextPath={props.siteNode} nodeTypes={props.nodeTypes} dispatch={dispatch} selectedNodes={state.selectedNodes} />
         </>
     );
 }

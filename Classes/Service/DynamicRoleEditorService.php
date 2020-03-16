@@ -6,8 +6,6 @@ namespace Sandstorm\NeosAcl\Service;
  * This file is part of the Neos.ACLInspector package.
  */
 
-use Doctrine\DBAL\Connection;
-use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\ContentRepository\Domain\Repository\WorkspaceRepository;
 use Neos\ContentRepository\Domain\Service\ContentDimensionPresetSourceInterface;
 use Neos\ContentRepository\Domain\Service\NodeTypeManager;
@@ -15,25 +13,10 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\Mvc\Routing\UriBuilder;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\Flow\Security\Authorization\Privilege\PrivilegeInterface;
-use Neos\Flow\Security\Authorization\PrivilegeManagerInterface;
 use Neos\Flow\Security\Context;
-use Neos\Flow\Security\Exception\NoSuchRoleException;
-use Neos\Flow\Security\Policy\PolicyService;
-use Neos\Flow\Security\Policy\Role;
-use Neos\Neos\Domain\Repository\SiteRepository;
-use Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\ContentRepository\Domain\Model\NodeLabelGeneratorInterface;
 use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\AbstractNodePrivilege;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilegeSubject;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\NodePrivilegeSubject;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\ReadNodePrivilege;
-use Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege;
-use Sandstorm\NeosAcl\Dto\ACLCheckerDto;
+use Sandstorm\NeosAcl\Domain\Dto\MatcherConfiguration;
 
 /**
  * @Flow\Scope("singleton")
@@ -78,19 +61,26 @@ class DynamicRoleEditorService
      */
     protected $contextFactory;
 
+    /**
+     * @Flow\InjectConfiguration(path="userInterface.navigateComponent.nodeTree.loadingDepth", package="Neos.Neos")
+     * @var string
+     */
+    protected $nodeTreeLoadingDepth;
 
-    public function generatePropsForReactWidget(ActionRequest $actionRequest): string
+
+    public function generatePropsForReactWidget(ActionRequest $actionRequest, ?MatcherConfiguration $dynamicRoleMatcherConfiguration): string
     {
         $props = [
             'nodeTypes' => $this->generateNodeTypeNames(),
             'nodeSearchEndpoint' => $this->generateNodeSearchEndpoint($actionRequest),
-            'siteNode' => $this->getSiteNodeContextPath(),
-
+            'siteNode' => $this->getSiteNode()->getContextPath(),
+            'nodeTreeLoadingDepth' => (int)$this->nodeTreeLoadingDepth,
 
             'csrfProtectionToken' => $this->securityContext->getCsrfProtectionToken(),
             'cssFilePath' => $this->resourceManager->getPublicPackageResourceUriByPath('resource://Sandstorm.NeosAcl/Public/React/extra-neos-wrapper.css'),
             'workspaces' => $this->getWorkspaces(),
-            'dimensions' => $this->getDimensionPresets()
+            'dimensions' => $this->getDimensionPresets(),
+            'expandedNodes' => $dynamicRoleMatcherConfiguration ? $this->generateExpandedNodeIdentifiers($dynamicRoleMatcherConfiguration, $this->getSiteNode()) : [],
         ];
 
         return json_encode($props);
@@ -104,6 +94,7 @@ class DynamicRoleEditorService
             $nodeTypes[] = [
                 'value' => $nodeType->getName(),
                 'label' => $nodeType->getName(),
+                'isDocumentNode' => $nodeType->isOfType('Neos.Neos:Document')
             ];
         }
         return $nodeTypes;
@@ -149,12 +140,30 @@ class DynamicRoleEditorService
         return $result;
     }
 
-    public function getSiteNodeContextPath(): string
+    public function getSiteNode(): NodeInterface
     {
         $context = $this->contextFactory->create([
             'workspaceName' => 'live'
         ]);
 
-        return $context->getCurrentSiteNode()->getContextPath();
+        return $context->getCurrentSiteNode();
+    }
+
+    private function generateExpandedNodeIdentifiers(MatcherConfiguration $dynamicRoleMatcherConfiguration, NodeInterface $siteNode)
+    {
+        $nodeContextPaths = [];
+
+        foreach ($dynamicRoleMatcherConfiguration->getSelectedNodeIdentifiers() as $nodeIdentifier) {
+            $node = $this->getSiteNode()->getContext()->getNodeByIdentifier($nodeIdentifier);
+            if ($node && $node->getParent()) {
+                // the node itself does not need to be expanded, but all parents should be expanded (so that the node which has the restriction is visible in the tree)
+                while ($node->getParent() !== $siteNode) {
+                    $node = $node->getParent();
+                    $nodeContextPaths[$node->getContextPath()] = $node->getContextPath();
+                }
+            }
+        }
+
+        return array_values($nodeContextPaths);
     }
 }

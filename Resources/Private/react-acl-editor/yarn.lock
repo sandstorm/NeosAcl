@@ -902,10 +902,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@neos-project/react-ui-components@5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@neos-project/react-ui-components/-/react-ui-components-5.1.2.tgz#e8d29823ec7382ffe102595f9f6025fa460dd99c"
-  integrity sha512-3IwSZX+3KqHMIXYwJSS+HpcSD+eGj49B/hfdgUQOa9fdoGrjEX7AosZfR21aNA0bojmued/ybz093Vki9lPsQg==
+"@neos-project/react-ui-components@5.1.4":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@neos-project/react-ui-components/-/react-ui-components-5.1.4.tgz#fe74e613a216d44aa456357156ccc06dfa84c276"
+  integrity sha512-YDpUluneasftYREOqAF1E/O2PidqW3aJx/quswpWygoewpXDeXuG7We0lit9IZl+kAy/hIknCWJWwdtQNtCdlQ==
 
 "@nodelib/fs.stat@^1.1.2":
   version "1.1.3"
