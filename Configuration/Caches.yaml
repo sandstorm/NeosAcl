@@ -1,2 +1,5 @@
 Flow_Security_Authorization_Privilege_Method:
   frontend: 'Sandstorm\NeosAcl\DynamicRoleEnforcement\SecurityAuthorizationPrivilegeMethodCacheFrontend'
+
+Flow_Aop_RuntimeExpressions:
+  frontend: 'Sandstorm\NeosAcl\DynamicRoleEnforcement\AopRuntimeExpressionsCacheFrontend'

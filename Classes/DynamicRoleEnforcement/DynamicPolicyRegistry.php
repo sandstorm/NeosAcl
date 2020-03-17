@@ -51,6 +51,35 @@ final class DynamicPolicyRegistry
     protected $dynamicPrivilegeTargetsPerType = [];
 
     /**
+     * are {@see $catchAllToDynamicPrivilegeMapping} and {@see $dynamicPrivilegeToCatchAllMapping} initialized and up to date with
+     * {@see $dynamicPrivilegeTargetsPerType}?
+     * @var boolean
+     */
+    protected $privilegeMappingsInitialized = false;
+
+    /**
+     * each key represents the "source" privilege target (i.e. the "template Catch All" to-be-copied one); and the value
+     * is another array where each element represents a "target" privilegeTarget; where the config from
+     * the source should be copied to.
+     *
+     * Built up in {@see initializeDynamicPrivilegeMapping}.
+     *
+     * @var array
+     */
+    protected $catchAllToDynamicPrivilegeMapping;
+
+    /**
+     * each key represents "target" privilege target; and each value represents the "source" privilege target (i.e. the "template Catch All" to-be-copied one)
+     *
+     * This is the reverse of {@see $catchAllToDynamicPrivilegeMapping}.
+     *
+     * Built up in {@see initializeDynamicPrivilegeMapping}.
+     *
+     * @var array
+     */
+    protected $dynamicPrivilegeToCatchAllMapping;
+
+    /**
      * This method should be called inside a custom Slot for {@see PolicyService::emitConfigurationLoaded()}
      *
      * @param array $dynamicPolicy
@@ -63,6 +92,9 @@ final class DynamicPolicyRegistry
                 self::ensurePrivilegeTargetIsInDynamicWhitelist($privilegeTargetType);
                 $this->dynamicPrivilegeTargetsPerType[$privilegeTargetType] = $privilegeTargetsForType;
             }
+
+            // we reset the privilege mappings as they need to be rebuilt if dynamicPrivilegeTargetsPerType changes.
+            $this->privilegeMappingsInitialized = false;
         }
 
         // merge together both policies
@@ -90,11 +122,11 @@ final class DynamicPolicyRegistry
      */
     public function postProcessMethodPermissionList(array $methodPermissions)
     {
-        $dynamicPrivilegeMapping = $this->buildDynamicPrivilegeMapping();
+        $this->initializeDynamicPrivilegeMapping();
 
         // now, copy all method permissions.
         foreach ($methodPermissions as &$inner) {
-            foreach ($dynamicPrivilegeMapping as $cacheIdentifierForCatchAllPrivilegeTarget => $extraCacheIdentifiers) {
+            foreach ($this->catchAllToDynamicPrivilegeMapping as $cacheIdentifierForCatchAllPrivilegeTarget => $extraCacheIdentifiers) {
                 if (isset($inner[$cacheIdentifierForCatchAllPrivilegeTarget])) {
                     foreach ($extraCacheIdentifiers as $cacheIdentifier) {
                         $inner[$cacheIdentifier] = $inner[$cacheIdentifierForCatchAllPrivilegeTarget];
@@ -106,6 +138,23 @@ final class DynamicPolicyRegistry
         return $methodPermissions;
     }
 
+    public function getAopRuntimeExpressionEntryIdentifierForCatchAllPrivilegeTarget(string $dynamicPrivilegeTargetCacheEntryIdentifier): ?string
+    {
+        $this->initializeDynamicPrivilegeMapping();
+
+        // the entry identifier has the format "flow_aop_expression_[cacheEntryIdentifier_of_role]", where
+        // [cacheEntryIdentifier_of_role] is the MD5 of role name + some more properties.
+        //
+        // Thus, we strip the flow_aop_expression_ part; and then try to find the policy cache entry identifier for the catch-all case.
+        $cacheIdentifier = str_replace('flow_aop_expression_', '', $dynamicPrivilegeTargetCacheEntryIdentifier);
+
+        if (isset($this->dynamicPrivilegeToCatchAllMapping[$cacheIdentifier])) {
+            // Now, we need to again prepend flow_aop_expression_ to; to build a proper cache entry identifier for Flow_Aop_RuntimeExpressions.
+            return 'flow_aop_expression_' . $this->dynamicPrivilegeToCatchAllMapping[$cacheIdentifier];
+        }
+
+        return null;
+    }
 
     /**
      * This method prepares a mapping between privilege targets to be copied; i.e. it creates an array,
@@ -113,15 +162,19 @@ final class DynamicPolicyRegistry
      * is another array where each element represents a "target" privilegeTarget; where the config from
      * the source should be copied to.
      *
-     * NOTE: the privilege targets are represented by their `Privilege->getCacheEntryIentifier()` return values;
+     * NOTE: the privilege targets are represented by their `Privilege->getCacheEntryIdentifier()` return values;
      * because that is later needed to update the Flow_Security_Authorization_Privilege_Method cache.
      *
-     * @return array
      * @throws \Neos\Flow\Security\Exception
      */
-    private function buildDynamicPrivilegeMapping(): array
+    private function initializeDynamicPrivilegeMapping(): void
     {
+        if ($this->privilegeMappingsInitialized === true) {
+            return;
+        }
+
         $dynamicPrivilegeMapping = [];
+        $dynamicPrivilegeToCatchAllMapping = [];
         foreach ($this->dynamicPrivilegeTargetsPerType as $privilegeTargetType => $dynamicPrivilegeTargets) {
             $catchAllPrivilegeTargetForType = self::ALLOWED_PRIVILEGE_TARGET_TYPES[$privilegeTargetType];
             $matcherForCatchAllPrivilegeTarget = static::getMatcherForCatchAllPrivilegeTargets($this->objectManager)[$catchAllPrivilegeTargetForType];
@@ -133,12 +186,17 @@ final class DynamicPolicyRegistry
             // Intermediate representation: build up the cache identifier for each dynamic privilege target
             $extraCacheIdentifiers = [];
             foreach ($dynamicPrivilegeTargets as $dynamicPrivilegeTargetIdentifier => $dynamicPrivilegeTargetConfiguration) {
-                $extraCacheIdentifiers[] = (new PrivilegeTarget($dynamicPrivilegeTargetIdentifier, $privilegeTargetType, $dynamicPrivilegeTargetConfiguration['matcher'], []))->createPrivilege(PrivilegeInterface::GRANT, [])->getCacheEntryIdentifier();
+                $cacheIdentifier = (new PrivilegeTarget($dynamicPrivilegeTargetIdentifier, $privilegeTargetType, $dynamicPrivilegeTargetConfiguration['matcher'], []))->createPrivilege(PrivilegeInterface::GRANT, [])->getCacheEntryIdentifier();
+                $extraCacheIdentifiers[] = $cacheIdentifier;
+                $dynamicPrivilegeToCatchAllMapping[$cacheIdentifier] = $cacheIdentifierForCatchAllPrivilegeTarget;
             }
 
             $dynamicPrivilegeMapping[$cacheIdentifierForCatchAllPrivilegeTarget] = $extraCacheIdentifiers;
         }
-        return $dynamicPrivilegeMapping;
+
+        $this->catchAllToDynamicPrivilegeMapping = $dynamicPrivilegeMapping;
+        $this->dynamicPrivilegeToCatchAllMapping = $dynamicPrivilegeToCatchAllMapping;
+        $this->privilegeMappingsInitialized = true;
     }
 
 

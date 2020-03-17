@@ -85,3 +85,20 @@ the dynamically-added roles.
 #### Implementation
 
 The post-processing of the `methodPermissions` is done using a custom cache frontend (`SecurityAuthorizationPrivilegeMethodCacheFrontend`).
+
+#### Implementing dynamic AOP Runtime Expressions
+
+Method privileges internally can use dynamic AOP Runtime Expressions (in case you check for method parameters). Especially
+the `MethodPrivilege` which is attached to the `RemoveNodePrivilege` uses the following expression code:
+
+```php
+return 'within(' . NodeInterface::class . ') && method(.*->setRemoved(removed == true))';
+```
+
+The `removed == true` part is a so-called *AOP Runtime Expression*. 
+
+This is internally implemented using the `Flow_Aop_RuntimeExpressions` "cache", which is pre-filled again during the compile
+time (which is a nasty side-effect).
+
+Thus, in our case we need to again implement a custom cache frontend (`AopRuntimeExpressionsCacheFrontend`),
+using the runtime expressions of the base configuration, which exists properly.
