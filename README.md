@@ -16,6 +16,23 @@ Main features:
 
 ![edit](./Documentation/edit.png)
 
+## Installation
+
+1. install the package:
+
+```
+composer require sandstorm/neosacl
+```
+
+2. run the migrations
+
+```
+./flow doctrine:migrate
+```
+
+3. login with admin account an visit the new menu entry 'Dynamic Roles'
+
+
 ## Development 
 
 **Initial (Package) Setup**
