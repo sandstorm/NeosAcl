@@ -156,7 +156,7 @@ class DynamicRoleEditorService
 
         foreach ($dynamicRoleMatcherConfiguration->getSelectedNodeIdentifiers() as $nodeIdentifier) {
             $node = $this->getSiteNode()->getContext()->getNodeByIdentifier($nodeIdentifier);
-            if ($node && $node->getParent()) {
+            if ($node && $node->getParent() && $node !== $siteNode) {
                 // the node itself does not need to be expanded, but all parents should be expanded (so that the node which has the restriction is visible in the tree)
                 while ($node->getParent() !== $siteNode) {
                     $node = $node->getParent();
