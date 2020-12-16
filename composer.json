@@ -14,6 +14,9 @@
     "extra": {
         "neos": {
             "package-key": "Sandstorm.NeosAcl"
-        }
+        },
+        "applied-flow-migrations": [
+            "Neos.Flow-20201109224100"
+        ]
     }
 }
