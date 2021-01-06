@@ -3,7 +3,7 @@
     "type": "neos-package",
     "name": "sandstorm/neosacl",
     "require": {
-        "neos/flow": "^4.0 || ^5.0 || ^6.0",
+        "neos/flow": "^7.0 || dev-master",
         "neos/fusion-afx": "*"
     },
     "autoload": {
