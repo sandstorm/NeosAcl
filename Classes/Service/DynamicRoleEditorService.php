@@ -16,6 +16,7 @@ use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Security\Context;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
+use Neos\Neos\Service\UserService;
 use Sandstorm\NeosAcl\Domain\Dto\MatcherConfiguration;
 
 /**
@@ -67,6 +68,11 @@ class DynamicRoleEditorService
      */
     protected $nodeTreeLoadingDepth;
 
+    /**
+     * @Flow\Inject
+     * @var UserService
+     */
+    protected $userService;
 
     public function generatePropsForReactWidget(ActionRequest $actionRequest, ?MatcherConfiguration $dynamicRoleMatcherConfiguration): string
     {
@@ -144,7 +150,7 @@ class DynamicRoleEditorService
     public function getSiteNode(): NodeInterface
     {
         $context = $this->contextFactory->create([
-            'workspaceName' => 'live'
+            'workspaceName' => $this->userService->getPersonalWorkspaceName()
         ]);
 
         return $context->getCurrentSiteNode();
