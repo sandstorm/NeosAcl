@@ -63,7 +63,7 @@ class MatcherConfiguration
         }
 
         $selectedDimensionPresets = [];
-        foreach ($json['selectedDimensionPresets']as $config) {
+        foreach ($json['selectedDimensionPresets'] as $config) {
             $selectedDimensionPresets[] = MatcherConfigurationSelectedDimensionPreset::fromConfig($config);
         }
 
@@ -88,15 +88,21 @@ class MatcherConfiguration
 
     private static function generatePolicyMatcherStringForSelectedWorkspaces(array $selectedWorkspaces): string
     {
-        $matcherParts = [];
-        foreach ($selectedWorkspaces as $workspace) {
-            $matcherParts[] = sprintf('isInWorkspace("%s")', $workspace);
-        }
-        if (empty($matcherParts)) {
+        if (empty($selectedWorkspaces)) {
             return 'true';
         }
 
-        return '(' . implode(' || ', $matcherParts) . ')';
+        /**
+         * isInWorkspace(["live", "workspace"]) will check if any of the given workspaces matches.
+         * The "live" workspace is always required, otherwise you will never be able to edit existing content already published to live.
+         * To restrict editing the "live" workspace, simply remove "LivePublisher" from parent roles.
+         */
+        $matcherPart = sprintf(
+            'isInWorkspace(["%s", "live"])',
+            implode('", "', $selectedWorkspaces)
+        );
+
+        return $matcherPart;
     }
 
     private static function generatePolicyMatcherStringForSelectedDimensions(array $dimensionPresets)
