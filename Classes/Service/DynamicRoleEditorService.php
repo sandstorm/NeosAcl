@@ -119,7 +119,7 @@ class DynamicRoleEditorService
         foreach ($this->workspaceRepository->findAll() as $workspace) {
             /* @var $workspace \Neos\ContentRepository\Domain\Model\Workspace */
 
-            if (!$workspace->isPersonalWorkspace()) {
+            if (!$workspace->isPersonalWorkspace() && $workspace->getName() !== 'live') {
                 $result[] = [
                     'name' => $workspace->getName(),
                     'label' => $workspace->getTitle()
