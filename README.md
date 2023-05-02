@@ -91,7 +91,7 @@ We are mostly working with `EditNodePrivilege` etc. - so why does this apply the
 
 Furthermore, to make this idea work, the `Policy.yaml` of this package defines a catch-all `Sandstorm.NeosAcl:EditAllNodes`
 PrivilegeTarget - so AOP will instrument the corresponding methods of `NodeInterface`. This catch-all makes sense
-in any case, because this switches the security framework [to an allowlist-only approach](https://docs.neos.io/cms/manual/backend-permissions/real-world-examples#user-rights-for-part-of-a-page-tree](https://docs.neos.io/cms/manual/backend-permissions/user-rights-in-page-tree)
+in any case, because this switches the security framework [to an allowlist-only approach](https://docs.neos.io/guide/manual/backend-permissions/real-world-examples#user-rights-for-part-of-a-page-tree)
 - making it easier to grasp.
 
 #### The goal
