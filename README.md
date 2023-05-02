@@ -6,11 +6,11 @@ The development of this package was sponsored by [ujamii](https://www.ujamii.com
 
 Main features:
 
-- Switch `RestrictedEditor` to a whitelist-only permission approach. By installing this package, the `RestrictedEditor` is
-  not allowed anymore to change any content.
+- Switch `RestrictedEditor` to an allowlist-only permission approach. By installing this package, the `RestrictedEditor` is
+  no longer allowed to change any content.
 - Configure dynamic roles through a Neos backend module.
 - Permissions on the node tree, workspaces and dimensions possible.
-- Permissions work predictably with sane defaults and purely-additive logic.
+- Permissions work predictably with sane defaults and purely additive logic.
 
 ![listing](./Documentation/listing.png)
 
@@ -18,28 +18,28 @@ Main features:
 
 ## Installation
 
-1. install the package:
+1. Install the package:
 
 ```
 composer require sandstorm/neosacl
 ```
 
-2. run the migrations
+2. Run the migrations
 
 ```
 ./flow doctrine:migrate
 ```
 
-3. login with admin account an visit the new menu entry 'Dynamic Roles'
+3. Log in with an admin account and visit the new menu entry 'Dynamic Roles'
 
 
 ## Development 
 
 **Initial (Package) Setup**
 
-- clone this package as "Sandstorm.NeosAcl" in the DistributionPackages of a Neos 4.3 or later installation
-- add it to `composer.json` as `"sandstorm/neosacl": "*"`
-- run `composer update`
+- Clone this package as `Sandstorm.NeosAcl` in the DistributionPackages of a Neos 4.3 or later installation
+- Add it to `composer.json` as `"sandstorm/neosacl": "*"`
+- Run `composer update`
  
 **Initial React Setup**
 
@@ -62,16 +62,16 @@ explained below and by the following diagram:
 
 ![Concept](./Documentation/DynamicMethodPrivileges.svg)
 
-#### How do Method Privileges Work
+#### How do Method Privileges work
 
-- Background: An implementation of `PointcutFilterInterface` can, during compile time of Flow, decide which classes
+- Background: An implementation of `PointcutFilterInterface` can - during compile time of Flow - decide which classes
   and methods match for a certain aspect.
-  - This is used in `PolicyEnforcementAspect` (which is the central point for enforcing **Method Privileges**).
+  - This is used in `PolicyEnforcementAspect` (which is the central point for enforcing **MethodPrivileges**).
   - There, the `MethodPrivilegePointcutFilter` is referenced.
   - The `MethodPrivilegePointcutFilter` asks the `PolicyService` for all configured `MethodPrivilege`s - and ensures
     AOP proxies are built for these methods.
 - **Side Effect**: Now, during building up the pointcut filters, the `MethodPrivilegePointcutFilter` **additionally** builds up
-  a data structure `methodPermissions` - which remembers for which method which `MethodPrivileges` are registered.
+  a data structure `methodPermissions` - which remembers which `MethodPrivileges` are registered for which method.
   - This data structure is stored **persistently in the `Flow_Security_Authorization_Privilege_Method` cache**.
   - At runtime, for a class which is intercepted by `PolicyEnforcementAspect`, all configured `MethodPrivilege`s are
     invoked - and they have to quickly decide if they match **this particular call-site**.
@@ -84,20 +84,20 @@ explained below and by the following diagram:
 - NOTE: You can only dynamically add `MethodPrivileges` for call-sites **which are already instrumented by AOP**;
   because otherwise the code will never get invoked (because of missing proxies).
 
-We are mostly working with `EditNodePrivilege` etc - so why does this apply there?
+We are mostly working with `EditNodePrivilege` etc. - so why does this apply there?
 
-- `EditNodePrivilege` has an internal `MethodPrivilege` **which takes care of the method-call enforcement part**;
+- `EditNodePrivilege` has an internal `MethodPrivilege` **which takes care of the method call enforcement part**;
   i.e. preventing you to call e.g. `NodeInterface::setProperty()` if you do not have the permission to do so.
 
 Furthermore, to make this idea work, the `Policy.yaml` of this package defines a catch-all `Sandstorm.NeosAcl:EditAllNodes`
 PrivilegeTarget - so AOP will instrument the corresponding methods of `NodeInterface`. This catch-all makes sense
-in any case, because this switches the security framework [to a whitelist-only approach](https://docs.neos.io/cms/manual/backend-permissions/real-world-examples#user-rights-for-part-of-a-page-tree)
+in any case, because this switches the security framework [to an allowlist-only approach](https://docs.neos.io/cms/manual/backend-permissions/real-world-examples#user-rights-for-part-of-a-page-tree](https://docs.neos.io/cms/manual/backend-permissions/user-rights-in-page-tree)
 - making it easier to grasp.
 
-#### The Goal
+#### The goal
 
 In order to make the dynamic policy enforcement work, we need to add custom stuff to the `methodPermissions` - for
-the dynamically-added roles.
+the dynamically added roles.
 
 #### Implementation
 
@@ -106,7 +106,7 @@ The post-processing of the `methodPermissions` is done using a custom cache fron
 #### Implementing dynamic AOP Runtime Expressions
 
 Method privileges internally can use dynamic AOP Runtime Expressions (in case you check for method parameters). Especially
-the `MethodPrivilege` which is attached to the `RemoveNodePrivilege` uses the following expression code:
+the `MethodPrivilege` - which is attached to the `RemoveNodePrivilege` - uses the following expression code:
 
 ```php
 return 'within(' . NodeInterface::class . ') && method(.*->setRemoved(removed == true))';
