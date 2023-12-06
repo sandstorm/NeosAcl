@@ -86,6 +86,20 @@ class MatcherConfiguration
         return implode(' && ', $matcherParts);
     }
 
+    public function toPolicyMatcherStringForAncestorNodesAndChildren(): string
+    {
+        $matcherParts = [];
+
+        $matcherParts[] = self::generatePolicyMatcherStringForSelectedWorkspaces($this->selectedWorkspaces);
+        $matcherParts[] = self::generatePolicyMatcherStringForSelectedDimensions($this->selectedDimensionPresets);
+        $nodeMatcherParts = [];
+        $nodeMatcherParts[] = self::generatePolicyMatcherStringForSelectedNodes($this->selectedNodes);
+        $nodeMatcherParts[] = self::generatePolicyMatcherStringForSelectedNodesAncestors($this->selectedNodes);
+        $matcherParts[] = '(' . implode(' || ', $nodeMatcherParts) . ')';
+
+        return implode(' && ', $matcherParts);
+    }
+
     private static function generatePolicyMatcherStringForSelectedWorkspaces(array $selectedWorkspaces): string
     {
         if (empty($selectedWorkspaces)) {
@@ -128,6 +142,22 @@ class MatcherConfiguration
         foreach ($selectedNodesConfig as $nodeConfig) {
             /* @var $nodeConfig \Sandstorm\NeosAcl\Domain\Dto\MatcherConfigurationSelectedNode */
             $matcherParts[] = $nodeConfig->toPolicyMatcherString();
+        }
+
+        if (empty($matcherParts)) {
+            return 'true';
+        }
+
+        return '(' . implode(' || ', $matcherParts) . ')';
+    }
+
+    private static function generatePolicyMatcherStringForSelectedNodesAncestors(array $selectedNodesConfig)
+    {
+        $matcherParts = [];
+
+        foreach ($selectedNodesConfig as $nodeConfig) {
+            /* @var $nodeConfig \Sandstorm\NeosAcl\Domain\Dto\MatcherConfigurationSelectedNode */
+            $matcherParts[] = $nodeConfig->toAncestorPolicyMatcherString();
         }
 
         if (empty($matcherParts)) {
