@@ -7,11 +7,11 @@
             <div class="neos-control-group{f:validation.ifHasErrors(for: 'dynamicRole.name', then: ' neos-error')}">
                 <label class="neos-control-label" for="name">Name of role</label>
                 <div class="neos-controls neos-controls-row">
-                    <f:form.textfield property="name" id="name" class="neos-span6"/>
+                    <f:form.textfield property="name" id="name" additionalAttributes="{pattern: '^\w+$'}" class="neos-span6"/>
                     <f:render partial="Module/Shared/FieldValidationResults" arguments="{fieldname: 'name'}"/>
                 </div>
-                <div class="neos-help-block">As roles are referenced by name, do not modify the name after its
-                    creation.
+                <div class="neos-help-block">Only alphanumeric characters and underscores are allowed. As roles are
+					referenced by name, do not modify the name after its creation.
                 </div>
             </div>
 
