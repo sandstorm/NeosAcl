@@ -91,7 +91,7 @@ class DynamicRoleController extends ActionController
     {
         $this->view->assign('dynamicRole', $dynamicRole);
         $this->view->assign('dynamicEditorProps', $this->dynamicRoleEditorService->generatePropsForReactWidget($this->request, MatcherConfiguration::fromJson($dynamicRole->getMatcher())));
-        $this->assignAvailableRoles();
+        $this->assignAvailableRoles($dynamicRole);
     }
 
     public function initializeUpdateAction() {
@@ -133,10 +133,22 @@ class DynamicRoleController extends ActionController
         $this->contentCache->flush();
     }
 
-    protected function assignAvailableRoles()
+    protected function assignAvailableRoles(DynamicRole $roleToEdit = null)
     {
-        $this->view->assign('availableRoles', array_filter($this->policyService->getRoles(), function(Role $role) {
-            return $role->getIdentifier() !== 'Neos.Neos:Editor' && $role->getIdentifier() !== 'Neos.Neos:Administrator' && $role->getIdentifier() !== 'Neos.Neos:SetupUser';
+        $hiddenRoles = [
+            'Neos.Neos:Editor',
+            'Neos.Neos:Administrator',
+            'Neos.Neos:SetupUser',
+        ];
+
+        if ($roleToEdit) {
+            $hiddenRoles[] = 'Dynamic:' . $roleToEdit->getName();
+        }
+
+        $this->view->assign('availableRoles', array_filter($this->policyService->getRoles(), function(Role $role) use ($roleToEdit) {
+            if (in_array($role->getIdentifier(), $hiddenRoles, true)) {
+                return false;
+            }
         }));
     }
 }
