@@ -135,8 +135,20 @@ class DynamicRoleController extends ActionController
 
     protected function assignAvailableRoles(DynamicRole $roleToEdit = null)
     {
+        $hiddenRoles = [
+            'Neos.Neos:Editor',
+            'Neos.Neos:Administrator',
+            'Neos.Neos:SetupUser',
+        ];
+
+        if ($roleToEdit) {
+            $hiddenRoles[] = 'Dynamic:' . $roleToEdit->getName();
+        }
+
         $this->view->assign('availableRoles', array_filter($this->policyService->getRoles(), function(Role $role) use ($roleToEdit) {
-            return $role->getIdentifier() !== 'Neos.Neos:Editor' && $role->getIdentifier() !== 'Neos.Neos:Administrator' && $role->getIdentifier() !== 'Neos.Neos:SetupUser' && (!$roleToEdit || $role->getIdentifier() !== 'Dynamic:' . $roleToEdit->getName());
+            if (in_array($role->getIdentifier(), $hiddenRoles, true)) {
+                return false;
+            }
         }));
     }
 }
