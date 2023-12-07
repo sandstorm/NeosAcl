@@ -12,6 +12,7 @@ use Neos\Flow\ObjectManagement\ObjectManagerInterface;
 use Neos\Flow\Security\Authorization\Privilege\PrivilegeInterface;
 use Neos\Flow\Security\Authorization\Privilege\PrivilegeTarget;
 use Neos\Flow\Security\Policy\PolicyService;
+use Neos\Neos\Security\Authorization\Privilege\ReadNodeTreePrivilege;
 use Neos\Utility\Arrays;
 
 /**
@@ -34,7 +35,8 @@ final class DynamicPolicyRegistry
     const ALLOWED_PRIVILEGE_TARGET_TYPES = [
         'Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege' => 'Sandstorm.NeosAcl:EditAllNodes',
         'Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege' => 'Sandstorm.NeosAcl:CreateAllNodes',
-        'Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege' => 'Sandstorm.NeosAcl:RemoveAllNodes'
+        'Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege' => 'Sandstorm.NeosAcl:RemoveAllNodes',
+        //ReadNodeTreePrivilege::class => 'Sandstorm.NeosAcl:NodeTreeRestricted'
     ];
 
     /**
@@ -103,6 +105,9 @@ final class DynamicPolicyRegistry
 
     private static function ensurePrivilegeTargetIsInDynamicWhitelist(string $privilegeTargetType)
     {
+        if ($privilegeTargetType === ReadNodeTreePrivilege::class) {
+            return true;
+        }
         if (!isset(self::ALLOWED_PRIVILEGE_TARGET_TYPES[$privilegeTargetType])) {
             throw new \RuntimeException('the privilege target type "' . $privilegeTargetType . '" is not allowed to be registered dynamically.');
         }
@@ -176,8 +181,15 @@ final class DynamicPolicyRegistry
         $dynamicPrivilegeMapping = [];
         $dynamicPrivilegeToCatchAllMapping = [];
         foreach ($this->dynamicPrivilegeTargetsPerType as $privilegeTargetType => $dynamicPrivilegeTargets) {
+            if (!isset(self::ALLOWED_PRIVILEGE_TARGET_TYPES[$privilegeTargetType])) {
+                continue;
+            }
             $catchAllPrivilegeTargetForType = self::ALLOWED_PRIVILEGE_TARGET_TYPES[$privilegeTargetType];
-            $matcherForCatchAllPrivilegeTarget = static::getMatcherForCatchAllPrivilegeTargets($this->objectManager)[$catchAllPrivilegeTargetForType];
+            $x = static::getMatcherForCatchAllPrivilegeTargets($this->objectManager);
+            if (!isset($x[$catchAllPrivilegeTargetForType])) {
+                continue; // TODO WHY?
+            }
+            $matcherForCatchAllPrivilegeTarget = $x[$catchAllPrivilegeTargetForType];
 
             $cacheIdentifierForCatchAllPrivilegeTarget = (new PrivilegeTarget($catchAllPrivilegeTargetForType, $privilegeTargetType, $matcherForCatchAllPrivilegeTarget, []))
                 ->createPrivilege(PrivilegeInterface::GRANT, [])
@@ -212,7 +224,10 @@ final class DynamicPolicyRegistry
         $configurationManager = $objectManager->get(ConfigurationManager::class);
         $policyConfiguration = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_POLICY);
         foreach (self::ALLOWED_PRIVILEGE_TARGET_TYPES as $catchAllPrivilegeTargetType => $catchAllPrivilegeTargetName) {
-            $catchAllPrivilegeTargetMatchers[$catchAllPrivilegeTargetName] = $policyConfiguration['privilegeTargets'][$catchAllPrivilegeTargetType][$catchAllPrivilegeTargetName]['matcher'];
+            if (!isset($policyConfiguration['privilegeTargets'][$catchAllPrivilegeTargetType][$catchAllPrivilegeTargetName]['matcher'])) { // TODO: WHY IF?
+                $catchAllPrivilegeTargetMatchers[$catchAllPrivilegeTargetName] = $policyConfiguration['privilegeTargets'][$catchAllPrivilegeTargetType][$catchAllPrivilegeTargetName]['matcher'];
+            }
+
         }
 
         return $catchAllPrivilegeTargetMatchers;

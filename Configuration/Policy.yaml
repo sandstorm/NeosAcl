@@ -23,6 +23,12 @@ privilegeTargets:
     'Sandstorm.NeosAcl:RemoveAllNodes':
       matcher: 'TRUE'
 
+  # TODO: BREAKING!!!
+  'Neos\Neos\Security\Authorization\Privilege\ReadNodeTreePrivilege':
+    # this privilegeTarget is defined to switch to a "whitelist" approach
+    'Sandstorm.NeosAcl:NodeTreeAllNodes':
+      matcher: 'TRUE'
+
 roles:
   'Neos.Neos:Administrator':
     privileges:
@@ -42,6 +48,11 @@ roles:
       -
         privilegeTarget: 'Sandstorm.NeosAcl:RemoveAllNodes'
         permission: GRANT
+      # TODO: ENABLED
+      -
+        privilegeTarget: 'Sandstorm.NeosAcl:NodeTreeAllNodes'
+        permission: GRANT
+
   'Neos.Neos:Editor':
       # Admins and unrestricted editors can still do everything.
       privileges:
@@ -54,3 +65,8 @@ roles:
         -
           privilegeTarget: 'Sandstorm.NeosAcl:RemoveAllNodes'
           permission: GRANT
+        # TODO: ENABLED
+        -
+          privilegeTarget: 'Sandstorm.NeosAcl:NodeTreeAllNodes'
+          permission: GRANT
+  'Sandstorm.NeosAcl:NodeTreeRestricted': {}

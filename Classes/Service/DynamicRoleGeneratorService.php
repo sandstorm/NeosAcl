@@ -56,11 +56,22 @@ class DynamicRoleGeneratorService
         $connection = $this->entityManager->getConnection();
         $rows = $connection->executeQuery('SELECT name, abstract, parentrolenames, matcher, privilege FROM sandstorm_neosacl_domain_model_dynamicrole')->fetchAll();
         foreach ($rows as $row) {
-
+            $parentRoles = json_decode($row['parentrolenames'], true);
             $matcherConfig = json_decode($row['matcher'], true);
-            $matcher = MatcherConfiguration::fromJson($matcherConfig)->toPolicyMatcherString();
             $privileges = [];
 
+            if (in_array('Sandstorm.NeosAcl:NodeTreeRestricted', $parentRoles) && ($row['privilege'] === DynamicRole::PRIVILEGE_VIEW || $row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT || $row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE)) {
+                $customConfiguration['privilegeTargets']['Neos\Neos\Security\Authorization\Privilege\ReadNodeTreePrivilege']['Dynamic:' . $row['name'] . '.ReadNodeTree'] = [
+                    'matcher' => MatcherConfiguration::fromJson($matcherConfig)->toPolicyMatcherStringForAncestorNodesAndChildren(),
+                ];
+
+                $privileges[] = [
+                    'privilegeTarget' => 'Dynamic:' . $row['name'] . '.ReadNodeTree',
+                    'permission' => 'GRANT'
+                ];
+            }
+
+            $matcher = MatcherConfiguration::fromJson($matcherConfig)->toPolicyMatcherString();
             if ($row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT || $row['privilege'] === DynamicRole::PRIVILEGE_VIEW_EDIT_CREATE_DELETE) {
                 $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege']['Dynamic:' . $row['name'] . '.EditNode'] = [
                     'matcher' => $matcher
@@ -92,7 +103,7 @@ class DynamicRoleGeneratorService
 
             $customConfiguration['roles']['Dynamic:' . $row['name']] = [
                 'abstract' => intval($row['abstract']) === 1,
-                'parentRoles' => json_decode($row['parentrolenames'], true),
+                'parentRoles' => $parentRoles,
                 'privileges' => $privileges
             ];
         }

@@ -22,6 +22,7 @@ use Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivile
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\NodePrivilegeSubject;
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\ReadNodePrivilege;
 use Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege;
+use Neos\Neos\Security\Authorization\Privilege\ReadNodeTreePrivilege;
 use Sandstorm\NeosAcl\Dto\ACLCheckerDto;
 
 class ACLCheckerService
@@ -80,7 +81,8 @@ class ACLCheckerService
                 'editNode' => $this->privilegeManager->isGrantedForRoles([$role], EditNodePrivilege::class, new NodePrivilegeSubject($node)),
                 'removeNode' => $this->privilegeManager->isGrantedForRoles([$role], RemoveNodePrivilege::class, new NodePrivilegeSubject($node)),
                 'createNodeOfType' => $this->privilegeManager->isGrantedForRoles([$role], CreateNodePrivilege::class, new CreateNodePrivilegeSubject($node)),
-                'showInTree' => $this->privilegeManager->isGrantedForRoles([$role], NodeTreePrivilege::class, new NodePrivilegeSubject($node))
+                'showInTree' => $this->privilegeManager->isGrantedForRoles([$role], NodeTreePrivilege::class, new NodePrivilegeSubject($node)) ||
+                    $this->privilegeManager->isGrantedForRoles([$role], ReadNodeTreePrivilege::class, new NodePrivilegeSubject($node))
             ];
         }
         return $checkedNodes;
