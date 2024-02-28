@@ -145,7 +145,7 @@ class DynamicRoleController extends ActionController
             $hiddenRoles[] = 'Dynamic:' . $roleToEdit->getName();
         }
 
-        $this->view->assign('availableRoles', array_filter($this->policyService->getRoles(), function(Role $role) use ($roleToEdit) {
+        $this->view->assign('availableRoles', array_filter($this->policyService->getRoles(), function(Role $role) use ($hiddenRoles) {
             if (in_array($role->getIdentifier(), $hiddenRoles, true)) {
                 return false;
             }
