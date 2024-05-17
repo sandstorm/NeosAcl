@@ -149,6 +149,7 @@ class DynamicRoleController extends ActionController
             if (in_array($role->getIdentifier(), $hiddenRoles, true)) {
                 return false;
             }
+            return true;
         }));
     }
 }
