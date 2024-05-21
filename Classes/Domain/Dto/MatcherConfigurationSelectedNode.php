@@ -69,6 +69,19 @@ class MatcherConfigurationSelectedNode
         return sprintf('(%s && %s)', $nodeIdentifierMatcher, $nodeTypeMatcher);
     }
 
+    public function toAncestorPolicyMatcherString(): string
+    {
+        $nodeIdentifierMatcher = sprintf('isAncestorNodeOf("%s")', $this->nodeIdentifier);
+
+        if (empty($this->whitelistedNodeTypes)) {
+            return $nodeIdentifierMatcher;
+        }
+
+        $nodeTypeMatcher = self::generatePolicyMatcherStringForNodeTypes($this->whitelistedNodeTypes);
+
+        return sprintf('(%s && %s)', $nodeIdentifierMatcher, $nodeTypeMatcher);
+    }
+
     private static function generatePolicyMatcherStringForNodeTypes(array $nodeTypes)
     {
         $matcherParts = [];
